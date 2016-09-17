@@ -45,8 +45,8 @@ y <- c(
   7-0.41,
   7)
 
-axis(side=1, pos=1.02, at=x[c(4,6)], labels=0:1) 
-axis(side=2, pos=0.82, at=y[c(4,6)], labels=0:1) 
+axis(side=1, pos=1.02, at=x[c(4,6)], labels=rep(" ", 2)) 
+axis(side=2, pos=0.82, at=y[c(4,6)], labels=rep(" ", 2)) 
 
 polygon(
   x=x[c(3, 7, 7 ,3)],
@@ -59,12 +59,10 @@ polygon(
   density=NA, col="gray90", border="black", lty="dotted")
 
 text(x[5], y[7]+0.2*3,"Title location: mgp[1] (lines)")
-w <- 2*strwidth(" Title ", units="inches")
-arrows(
-  x[5]-w/2,     y[7]+0.2*3,
-  x[5]-w/2-0.3, y[7]+0.2*3+0.9, length=0.05, code=1)
-text(
-  x[5]-w/2-0.3, y[7]+0.2*3+0.9, "mgp[1]=3 lines ", adj=1, cex=1.0)
+text(x[5], y[1]+0.2*1,"xlab location: mgp[2] (lines)")
+text(x[1]+0.2*1, y[5],"ylab location: mgp[2] (lines)", srt=90)
+
+# w <- 2*strwidth(" Title ", units="inches")
 
 arrows(
   x[3],     y[1],
@@ -74,7 +72,7 @@ segments(
   x[3]-0.5, y[2]-1.5, length=0.05)
 text(
   x[3]-0.5, y[2]-1.5, 
-  "mar[1]=5.2 lines \nmai[1]=1.02 inches ", adj=1, cex=1.0)
+  "mar[1] (lines) \nmai[1] (inches) ", adj=1, cex=1.0)
 
 arrows(
   x[7],     y[7],
@@ -84,7 +82,7 @@ segments(
   x[7]-0.3, y[8]+0.9, length=0.05)
 text(
   x[7]-0.3, y[8]+0.9, 
-  "mar[3]=4.2 lines \nmai[3]=0.82 inches ", adj=1, cex=1.0)
+  "mar[3] (lines) \nmai[3] (inches) ", adj=1, cex=1.0)
 
 arrows(
   x[1], y[7],
@@ -94,7 +92,7 @@ segments(
   x[2]-0.6, y[7]+1.8)
 text(
   x[2]-0.6, y[7]+1.8,
-  "mar[2]=4.2 lines \nmai[2]=0.82 inches ", adj=1, cex=1.0)
+  "mar[2] (lines) \nmai[2] (inches) ", adj=1, cex=1.0)
 
 arrows(
   x[7],     y[3],
@@ -104,7 +102,7 @@ segments(
   x[8]-0.5, y[3]-1.5)
 text(
   x[8]-0.5, y[3]-1.5,
-  "mar[4]=2.1 lines \nmai[4]=0.42 inches ", adj=1, cex=1.0)
+  "mar[4] (lines) \nmai[4] (inches) ", adj=1, cex=1.0)
 
 polygon(
   x=x[c(1, 9, 9, 1)],
