@@ -31,7 +31,8 @@ x <- c(
   0+0.41,
   0+0.82,
   0+0.82+0.04*(7-0.82-0.42),
-  0+0.82+0.50*(7-0.82-0.42),
+  0+0.82+0.25*(7-0.82-0.42),
+  0+0.82+0.75*(7-0.82-0.42),
   7-0.42-0.04*(7-0.82-0.42),
   7-0.42,
   7-0.21,
@@ -41,7 +42,8 @@ y <- c(
   0+0.51,
   0+1.02,
   0+1.02+0.04*(7-1.02-0.84),
-  0+1.02+0.50*(7-1.02-0.84),
+  0+1.02+0.25*(7-1.02-0.84),
+  0+1.02+0.75*(7-1.02-0.84),
   7-0.82-0.04*(7-1.02-0.82),
   7-0.82,
   7-0.41,
@@ -61,7 +63,7 @@ polygon(
   density=NA, col="gray90", border="black", lty="dotted")
 
 s1 <- "dev.size()[1] (in, cm, or px)"
-s2 <- "pin[1] (in)"
+s2 <- "fin[1] (in)"
 w <- strwidth(s1)
 text(3.5, y[1]-0.4, paste(s1, s2, sep="\n"))
 arrows(x[1]+w/2, y[1]-0.4, x[1], y[1]-0.4, len=0.05)
@@ -70,15 +72,25 @@ arrows(x[9]-w/2, y[1]-0.4, x[9], y[1]-0.4, len=0.05)
 segments(x[1], y[1]-0.1, x[1], y[1]-0.7)
 segments(x[9], y[1]-0.1, x[9], y[1]-0.7)
 
+arrows(x[6]-0.9, y[6]-0.3, x[6], y[6], len=0.05)
+text(x[6]-0.9, y[6]-0.3, '+4% if xaxs="r"\n+4% if yaxs="r"', adj=1)
+s5 <- "usr[1:2] (user)"
+s6 <- "plt[1:2] (pct)"
+s7 <- "pin[1:2] (in)"
+w <- strwidth(s5)
+arrows(x[6]-w/2, y[5], x[3], y[5], len=0.05)
+arrows(x[6]+w/2, y[5], x[7], y[5], len=0.05)
+text(x[5], y[5], paste(s5, s6, s7, sep="\n"))
+
 s3 <- "dev.size()[2] (in, cm, or px)"
-s4 <- "pin[2] (in)"
+s4 <- "fin[2] (in)"
 w <- strwidth(s3)
 text(x[1]-0.4, 3.5, paste(s3, s4, sep="\n"), srt=90)
-arrows(x[1]-0.4, y[1]-w/2, x[1], y[1]-w/2, len=0.05)
-arrows(x[9]-w/2, y[1]-0.4, x[9], y[1]-0.4, len=0.05)
+arrows(x[1]-0.4, y[1]+w/2, x[1]-0.4, y[1], len=0.05)
+arrows(x[1]-0.4, y[10]-w/2, x[1]-0.4, y[10], len=0.05)
 
-segments(x[1], y[1]-0.1, x[1], y[1]-0.7)
-segments(x[9], y[1]-0.1, x[9], y[1]-0.7)
+segments(x[1]-0.1, y[1], x[1]-0.7, y[1])
+segments(x[1]-0.1, y[10], x[1]-0.7, y[10])
 
 arrows(
   x[3],     y[1],
@@ -91,33 +103,33 @@ text(
   "mar[1] (lines)\nmai[1] (in)", adj=0, cex=1.0)
 
 arrows(
-  x[7],     y[7],
-  x[7],     y[9], length=0.05, code=3)
+  x[8],     y[8],
+  x[8],     y[10], length=0.05, code=3)
 segments(
-  x[7],     y[8],
-  x[7]-0.3, y[8], length=0.05)
+  x[8],     y[9],
+  x[8]-0.3, y[9], length=0.05)
 text(
-  x[7]-0.5, y[8], 
+  x[8]-0.5, y[9], 
   " mar[3] (lines)\n mai[3] (in)", adj=1, cex=1.0)
 
 arrows(
-  x[1], y[7],
-  x[3], y[7], length=0.05, code=3)
+  x[1], y[8],
+  x[3], y[8], length=0.05, code=3)
 segments(
-  x[2], y[7],
-  x[3]+0.5, y[8])
+  x[2], y[8],
+  x[3]+0.5, y[9])
 text(
-  x[3]+0.5, y[8],
+  x[3]+0.5, y[9],
   "mar[2] (lines)\nmai[2] (in)", adj=0, cex=1.0)
 
 arrows(
-  x[7],     y[3],
-  x[9],     y[3], length=0.05, code=3)
-segments(
   x[8],     y[3],
-  x[8]-0.5, y[2]-0.1)
+  x[10],     y[3], length=0.05, code=3)
+segments(
+  x[9],     y[3],
+  x[9]-0.5, y[2]-0.1)
 text(
-  x[8]-0.5, y[2]-0.1,
+  x[9]-0.5, y[2]-0.1,
   "mar[4] (lines)\nmai[4] (in)", adj=1, cex=1.0)
 
 polygon(
