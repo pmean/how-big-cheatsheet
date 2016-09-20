@@ -35,7 +35,7 @@ axis(side=2, pos=x(300), at=y(c(304, 396)), labels=rep(" ", 2))
 polygon(
   x=x(c(300, 400, 400, 300)),
   y=y(c(300, 300, 400, 400)),
-  density=NA, col="olivedrab1", border=NA)
+  density=NA, col="olivedrab1", border="black")
 
 # user coordinates defined by xlim, ylim
 polygon(
@@ -46,22 +46,22 @@ polygon(
 # graphics device size (x)
 s1 <- "dev.size()[1] (in, cm, px), fin[1] (in)"
 w1 <- strwidth(s1)
-text(x(304), y(150), s1, adj=0)
-arrows(x(300), y(150), x(200), y(150), len=0.05)
-arrows(x(308)+w1, y(150), x(500), y(150), len=0.05)
-segments(x(200), y(190), x(200), y(110))
-segments(x(500), y(190), x(500), y(110))
+text    (x(304),    y(150), s1, adj=0)
+arrows  (x(300),    y(150), x(200), y(150), lwd=3, len=0.05)
+arrows  (x(308)+w1, y(150), x(500), y(150), lwd=3, len=0.05)
+segments(x(200),    y(190), x(200), y(110), lwd=3)
+segments(x(500),    y(190), x(500), y(110), lwd=3)
 
 # graphics device size (y)
 s2 <- "dev.size()[2] (in, cm, px), fin[2] (in)"
 w2 <- strwidth(s2)
-text(x(150), y(304), s2, adj=0, srt=90)
-arrows(x(150), y(300), x(150), y(200), len=0.05)
-arrows(x(150), y(308)+w2, x(150), y(500), len=0.05)
-segments(x(190), y(200), x(110), y(200))
-segments(x(190), y(500), x(110), y(500))
+text    (x(150), y(304), s2, adj=0, srt=90)
+arrows  (x(150), y(300),    x(150), y(200), lwd=3, len=0.05)
+arrows  (x(150), y(308)+w2, x(150), y(500), lwd=3, len=0.05)
+segments(x(190), y(200),    x(110), y(200), lwd=3)
+segments(x(190), y(500),    x(110), y(500), lwd=3)
 
-# plotting region size (x)
+# plotting region size (x--pin[1], plt[1], plt[2])
 s3 <- "pin[1] (in)"
 w3 <- strwidth(s3)
 text  (x(312),    y(330), s3, adj=0)
@@ -71,9 +71,9 @@ arrows(x(316)+w3, y(330), x(400), y(330), lwd=3, len=0.05)
 s4 <- "plt[1] (pct)"
 w4 <- strwidth(s4)
 text    (x(312), y(310), s4, adj=0)
-arrows  (x(200), y(310), x(300), y(310), lwd=3, len=0.05)
-segments(x(300), y(310), x(308), y(310), lty="dotted", lwd=3)
-segments(x(500), y(310), x(316)+w4, y(310), lty="dotted", lwd=3)
+arrows  (x(200), y(310), x(300),    y(310), lwd=3, len=0.05)
+segments(x(300), y(310), x(308),    y(310), lwd=3, lty="dotted")
+segments(x(500), y(310), x(316)+w4, y(310), lwd=3, lty="dotted")
 
 s5 <- "plt[2] (pct)"
 w5 <- strwidth(s5)
@@ -82,41 +82,42 @@ segments(x(200),    y(320), x(308), y(320), lwd=3)
 arrows  (x(316)+w5, y(320), x(400), y(320), lwd=3, len=0.05)
 segments(x(400),    y(320), x(500), y(320), lwd=3, lty="dotted")
 
-
 s6 <- "pin[2] (in)"
 w6 <- strwidth(s6)
 arrows(x(390), y(371)-w6, x(390), y(300), lwd=3, len=0.05)
 arrows(x(390), y(379),    x(390), y(400), lwd=3, len=0.05)
 text  (x(390), y(375), s6, adj=1, srt=90)
 
+# plotting region size (x--pin[1], plt[1], plt[2])
 s7 <- "plt[4] (pct)"
 w7 <- strwidth(s7)
 text    (x(380), y(375), s7, adj=1, srt=90)
 segments(x(380), y(200), x(380), y(371)-w7, lwd=3)
-arrows  (x(380), y(379), x(380), y(400), lwd=3, len=0.05)
-segments(x(380), y(400), x(380), y(500), lwd=3, lty="dotted")
+arrows  (x(380), y(379), x(380), y(400),    lwd=3, len=0.05)
+segments(x(380), y(400), x(380), y(500),    lwd=3, lty="dotted")
 
 s8 <- "plt[3] (pct)"
 w8 <- strwidth(s8)
 text    (x(370), y(375), s8, adj=1, srt=90)
 segments(x(370), y(200), x(370), y(371)-w7, lwd=3, lty="dotted")
-arrows  (x(370), y(200), x(370), y(300), lwd=3, len=0.05)
-segments(x(370), y(379), x(370), y(500), lwd=3, lty="dotted")
+arrows  (x(370), y(200), x(370), y(300),    lwd=3, len=0.05)
+segments(x(370), y(379), x(370), y(500),    lwd=3, lty="dotted")
 
-# bottom margin
-arrows  (x(302), y(200), x(302), y(300), length=0.05, code=3)
-segments(x(302), y(233), x(308), y(233), length=0.05)
-text(    x(312), y(233), "mai[1] (in), mar[1] (lines)", adj=0, cex=1.0)
 
 # lower left user coordinates
-arrows  (x(267), y(267), x(300), y(300), len=0.05)
-segments(x(267), y(267), x(308), y(267))
+arrows  (x(267), y(267), x(300), y(300), lwd=3, len=0.05)
+segments(x(267), y(267), x(308), y(267), lwd=3)
 text    (x(312), y(267), "user[c(1,3)] (user)", adj=0)
 
 # upper right user coordinates
 arrows  (x(433), y(433), x(400), y(400), lwd=3, len=0.05)
 segments(x(433), y(433), x(360), y(433), lwd=3)
 text    (x(356), y(433), "user[c(2,4)] (user)", adj=1)
+
+# bottom margin
+arrows  (x(302), y(200), x(302), y(300), lwd=3, length=0.05, code=3)
+segments(x(302), y(233), x(308), y(233), lwd=3, length=0.05)
+text(    x(312), y(233), "mai[1] (in), mar[1] (lines)", adj=0, cex=1.0)
 
 # top margin
 arrows  (x(398), y(400), x(398), y(500), lwd=3, length=0.05, code=3)
@@ -129,12 +130,12 @@ segments(x(250), y(398), x(250), y(392), lwd=3)
 text    (x(250), y(388), "mai[2] (in), mar[2] (lines)", adj=1, srt=90)
 
 # right margin
-arrows(x(400), y(300), x(500), y(300), length=0.05, code=3)
-segments(x(450), y(300), x(450), y(340))
-text(x(450), y(344), "mai[4] (in), nmar[4] (lines)", adj=0, srt=90, cex=1.0)
+arrows  (x(400), y(302), x(500), y(302), lwd=3, length=0.05, code=3)
+segments(x(450), y(302), x(450), y(340), lwd=3)
+text    (x(450), y(344), "mai[4] (in), nmar[4] (lines)", adj=0, srt=90, cex=1.0)
 
 axis(side=1, pos=y(300), at=x(c(304, 396)), labels=rep(" ", 2), lwd=3) 
 axis(side=2, pos=x(300), at=y(c(304, 396)), labels=rep(" ", 2), lwd=3) 
 
-polygon(x=x(c(200, 500, 500, 200)), y=y(c(200, 200, 500, 500)),   lty="dashed")
+polygon(x=x(c(200, 500, 500, 200)), y=y(c(200, 200, 500, 500)), lwd=3, lty="dashed")
 ```
