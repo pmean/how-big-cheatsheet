@@ -17,6 +17,7 @@ x <- function(p) {
   w <- (p/100) %% 1
   return((1-w)*marks[i]+w*marks[i+1])
 }
+
 y <- function(p) {
   marks <- c(-1, 0, 1.02, 7-0.82, 7, 7)
   p <- ifelse (p < 100, 100, p)
@@ -25,11 +26,9 @@ y <- function(p) {
   w <- (p/100) %% 1
   return((1-w)*marks[i]+w*marks[i+1])
 }
+
 par(mar=rep(0, 4), xaxs="i", yaxs="i")
 plot(c(-1,7), c(-1,7), type="n", axes=FALSE)
-
-axis(side=1, pos=y(300), at=x(c(304, 396)), labels=rep(" ", 2)) 
-axis(side=2, pos=x(300), at=y(c(304, 396)), labels=rep(" ", 2)) 
 
 # user coordinates after adding 4%
 polygon(
@@ -139,3 +138,28 @@ axis(side=2, pos=x(300), at=y(c(304, 396)), labels=rep(" ", 2), lwd=3)
 
 polygon(x=x(c(200, 500, 500, 200)), y=y(c(200, 200, 500, 500)), lwd=3, lty="dashed")
 ```
+
+```{r string-size, fig.width=2.62, fig.height=2.62}
+par(mar=c(2.1, 2.1, 0.1, 0.1))
+# test
+plot(c(1:10,9:1))
+par("cin")
+par("cra")
+par("csi")
+par("cxy")
+
+s <- "gh"
+text(10, 5, s, cex=3)
+text( 6, 5, "h", cex=3)
+text( 3, 5, "g", cex=3)
+# test
+x <- 1
+Hi.width.user <- strwidth(s, units="user", cex=3)
+print(Hi.width.user)
+Hi.height.user <- strheight(s, units="user", cex=3)
+print(Hi.height.user)
+x.box <- 10+c(-1,-1,1,1)*Hi.width.user/2
+y.box <-  5+c(-1,1,1,-1)*Hi.height.user/2
+polygon(x=x.box,y=y.box,border="red")
+```
+
