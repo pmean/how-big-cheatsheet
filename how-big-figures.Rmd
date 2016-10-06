@@ -3,13 +3,15 @@ title: "How-Big-Cheatsheet"
 author: "Steve Simon"
 date: "September 17, 2016"
 output: html_document
----
+---p
 
-Note: once I am done with this, I need to do a cheat sheet on date-time values in R.
+# How Big is My Graph?
 
-The first figure illustrates the margins. Start with the assumption that the graph is seven inches by seven inches and that mar=c(5.1, 4.1, 4.1, 2.1) and mai=c(1.02, 0.82, 0.82, 0.42) which means 5 lines per inch. Also assume that there are 96 pixels per inch.
+## An R Cheatsheet
 
-```{r margins, fig.width=5.25, fig.height=5.25}
+```{r prelims, echo=FALSE}
+# Note: once I am done with this, I need to do a cheat sheet on date-time values in R.
+
 x <- function(p) {
   marks <- c(-1, 0, 0.82, 7-0.42, 7, 7)
   p <- ifelse (p < 100, 100, p)
@@ -28,21 +30,34 @@ y <- function(p) {
   return((1-w)*marks[i]+w*marks[i+1])
 }
 
-par(mar=rep(0, 4), xaxs="i", yaxs="i")
-plot(c(-1,7), c(-1,7), type="n", axes=FALSE)
+draw_framework <- function() {
+  par(mar=rep(0, 4), xaxs="i", yaxs="i")
+  plot(c(-1,7), c(-1,7), type="n", axes=FALSE)
 
-# user coordinates after adding 4%
-polygon(
-  x=x(c(300, 400, 400, 300)),
-  y=y(c(300, 300, 400, 400)),
-  density=NA, col="olivedrab1", border="black")
+  # user coordinates after adding 4%
+  polygon(
+    x=x(c(300, 400, 400, 300)),
+    y=y(c(300, 300, 400, 400)),
+    density=NA, col="olivedrab1", border="black")
 
-# user coordinates defined by xlim, ylim
-polygon(
-  x=x(c(304, 396, 396, 304)),
-  y=y(c(304, 304, 396, 396)),
-  density=NA, col="olivedrab", border="black", lty="dotted")
+  # user coordinates defined by xlim, ylim
+  polygon(
+    x=x(c(304, 396, 396, 304)),
+    y=y(c(304, 304, 396, 396)),
+    density=NA, col="olivedrab", border="black", lty="dotted")
 
+  axis(side=1, pos=y(300), at=x(c(304, 396)), labels=rep(" ", 2), lwd=3) 
+  axis(side=2, pos=x(300), at=y(c(304, 396)), labels=rep(" ", 2), lwd=3) 
+
+  polygon(x=x(c(200, 500, 500, 200)), y=y(c(200, 200, 500, 500)), lwd=3, lty="dashed")
+}
+```
+
+
+The first figure illustrates the margins. Start with the assumption that the graph is seven inches by seven inches and that mar=c(5.1, 4.1, 4.1, 2.1) and mai=c(1.02, 0.82, 0.82, 0.42) which means 5 lines per inch. Also assume that there are 96 pixels per inch.
+
+```{r margins, fig.width=5.25, fig.height=5.25, echo=FALSE}
+draw_framework()
 # graphics device size (x)
 s1 <- "dev.size()[1] (in, cm, px), fin[1] (in)"
 w1 <- strwidth(s1)
@@ -61,6 +76,7 @@ arrows  (x(150), y(308)+w2, x(150), y(500), lwd=3, len=0.05)
 segments(x(190), y(200),    x(110), y(200), lwd=3)
 segments(x(190), y(500),    x(110), y(500), lwd=3)
 
+draw_framework()
 # plotting region size (x--pin[1], plt[1], plt[2])
 s3 <- "pin[1] (in)"
 w3 <- strwidth(s3)
@@ -134,10 +150,6 @@ arrows  (x(400), y(302), x(500), y(302), lwd=3, length=0.05, code=3)
 segments(x(450), y(302), x(450), y(340), lwd=3)
 text    (x(450), y(344), "mai[4] (in), nmar[4] (lines)", adj=0, srt=90, cex=1.0)
 
-axis(side=1, pos=y(300), at=x(c(304, 396)), labels=rep(" ", 2), lwd=3) 
-axis(side=2, pos=x(300), at=y(c(304, 396)), labels=rep(" ", 2), lwd=3) 
-
-polygon(x=x(c(200, 500, 500, 200)), y=y(c(200, 200, 500, 500)), lwd=3, lty="dashed")
 ```
 
 ```{r string-size, fig.width=2.62, fig.height=2.62}
