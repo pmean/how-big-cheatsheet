@@ -9,7 +9,7 @@ The first figure illustrates the margins. Start with the assumption that the gra
 
 ```{r margins, fig.width=5.25, fig.height=5.25}
 x <- function(p) {
-  marks <- c(-1, 0, 0.82, 7-0.42, 7, 7)
+  marks <- c(-1, 0, 0.82, 7-0.42, 6.9, 6.9)
   p <- ifelse (p < 100, 100, p)
   p <- ifelse (p > 500, 500, p)
   i <- p %/% 100
@@ -18,7 +18,7 @@ x <- function(p) {
 }
 
 y <- function(p) {
-  marks <- c(-1, 0, 1.02, 7-0.82, 7, 7)
+  marks <- c(-1, 0, 1.02, 7-0.82, 6.9, 6.9)
   p <- ifelse (p < 100, 100, p)
   p <- ifelse (p > 500, 500, p)
   i <- p %/% 100
@@ -42,7 +42,7 @@ polygon(
   density=NA, col="olivedrab", border="black", lty="dotted")
 
 # graphics device size (x)
-s1 <- "dev.size()[1] (in, cm, px), fin[1] (in)"
+s1 <- "fin[1] (in)"
 w1 <- strwidth(s1)
 text    (x(304),    y(150), s1, adj=0)
 arrows  (x(300),    y(150), x(200), y(150), lwd=3, len=0.05)
@@ -51,7 +51,7 @@ segments(x(200),    y(190), x(200), y(110), lwd=3)
 segments(x(500),    y(190), x(500), y(110), lwd=3)
 
 # graphics device size (y)
-s2 <- "dev.size()[2] (in, cm, px), fin[2] (in)"
+s2 <- "fin[2] (in)"
 w2 <- strwidth(s2)
 text    (x(150), y(304), s2, adj=0, srt=90)
 arrows  (x(150), y(300),    x(150), y(200), lwd=3, len=0.05)
@@ -102,34 +102,34 @@ arrows  (x(370), y(200), x(370), y(300),    lwd=3, len=0.05)
 segments(x(370), y(379), x(370), y(500),    lwd=3, lty="dotted")
 
 
-# lower left user coordinates
+# lower left user coordinates, usr[c(1,3)] (user)
 arrows  (x(267), y(267), x(300), y(300), lwd=3, len=0.05)
-segments(x(267), y(267), x(308), y(267), lwd=3)
-text    (x(312), y(267), "user[c(1,3)] (user)", adj=0)
+segments(x(267), y(267), x(314), y(267), lwd=3)
+text    (x(318), y(267), "usr[c(1,3)] (user)", adj=0)
 
-# upper right user coordinates
+# upper right user coordinates, usr[c(2,4)] (user)
 arrows  (x(433), y(433), x(400), y(400), lwd=3, len=0.05)
 segments(x(433), y(433), x(360), y(433), lwd=3)
-text    (x(356), y(433), "user[c(2,4)] (user)", adj=1)
+text    (x(356), y(433), "usr[c(2,4)] (user)", adj=1)
 
-# bottom margin
-arrows  (x(302), y(200), x(302), y(300), lwd=3, length=0.05, code=3)
-segments(x(302), y(233), x(308), y(233), lwd=3, length=0.05)
-text(    x(312), y(233), "mai[1] (in), mar[1] (lines)", adj=0, cex=1.0)
+# bottom margin, mai[1] (in), mar[1] (lines)
+arrows  (x(308), y(200), x(308), y(300), lwd=3, len=0.05, code=3)
+segments(x(308), y(233), x(314), y(233), lwd=3)
+text(    x(318), y(233), "mai[1] (in), mar[1] (lines)", adj=0, cex=1.0)
 
-# top margin
-arrows  (x(398), y(400), x(398), y(500), lwd=3, length=0.05, code=3)
-segments(x(398), y(467), x(360), y(467), lwd=3)
+# top margin, mai[3] (in), nmar[3] (lines)
+arrows  (x(366), y(400), x(366), y(500), lwd=3, len=0.05, code=3)
+segments(x(366), y(467), x(360), y(467), lwd=3)
 text    (x(356), y(467), "mai[3] (in), nmar[3] (lines)", adj=1, cex=1.0)
 
-# left margin
-arrows  (x(200), y(398), x(300), y(398), lwd=3, len=0.05, code=3)
-segments(x(250), y(398), x(250), y(392), lwd=3)
-text    (x(250), y(388), "mai[2] (in), mar[2] (lines)", adj=1, srt=90)
+# left margin, mai[2] (in), mar[2] (lines)
+arrows  (x(200), y(392), x(300), y(392), lwd=3, len=0.05, code=3)
+segments(x(250), y(392), x(250), y(386), lwd=3)
+text    (x(250), y(382), "mai[2] (in), mar[2] (lines)", adj=1, srt=90)
 
-# right margin
-arrows  (x(400), y(302), x(500), y(302), lwd=3, length=0.05, code=3)
-segments(x(450), y(302), x(450), y(340), lwd=3)
+# right margin, mai[4] (in), nmar[4] (lines)
+arrows  (x(400), y(334), x(500), y(334), lwd=3, len=0.05, code=3)
+segments(x(450), y(334), x(450), y(340), lwd=3)
 text    (x(450), y(344), "mai[4] (in), nmar[4] (lines)", adj=0, srt=90, cex=1.0)
 
 axis(side=1, pos=y(300), at=x(c(304, 396)), labels=rep(" ", 2), lwd=3) 
