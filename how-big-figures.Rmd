@@ -5,8 +5,7 @@ date: "September 17, 2016"
 output: html_document
 ---
 
-The first figure illustrates the margins. Start with the assumption that the graph is seven inches by seven inches and that mar=c(5.1, 4.1, 4.1, 2.1) and mai=c(1.02, 0.82, 0.82, 0.42)
-which means 5 lines per inch. Also assume that there are 96 pixels per inch.
+The first figure illustrates the margins. Start with the assumption that the graph is seven inches by seven inches and that mar=c(5.1, 4.1, 4.1, 2.1) and mai=c(1.02, 0.82, 0.82, 0.42) which means 5 lines per inch. Also assume that there are 96 pixels per inch.
 
 ```{r margins, fig.width=5.25, fig.height=5.25}
 x <- function(p) {
