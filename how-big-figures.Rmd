@@ -32,7 +32,7 @@ y <- function(p) {
 
 draw_framework <- function() {
   par(mar=rep(0, 4), xaxs="i", yaxs="i")
-  plot(c(-1,7), c(-1,7), type="n", axes=FALSE)
+  plot(c(-1,7.1), c(-1,7.1), type="n", axes=FALSE)
 
   # user coordinates after adding 4%
   polygon(
@@ -132,7 +132,7 @@ text    (x(356), y(433), "user[c(2,4)] (user)", adj=1)
 
 # bottom margin
 arrows  (x(302), y(200), x(302), y(300), lwd=3, length=0.05, code=3)
-segments(x(302), y(233), x(308), y(233), lwd=3, length=0.05)
+segments(x(302), y(233), x(308), y(233), lwd=3)
 text(    x(312), y(233), "mai[1] (in), mar[1] (lines)", adj=0, cex=1.0)
 
 # top margin
