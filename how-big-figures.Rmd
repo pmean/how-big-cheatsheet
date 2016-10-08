@@ -3,11 +3,7 @@ title: "How-Big-Cheatsheet"
 author: "Steve Simon"
 date: "September 17, 2016"
 output: html_document
----p
-
-# How Big is My Graph?
-
-## An R Cheatsheet
+---
 
 ```{r prelims, echo=FALSE}
 # Note: once I am done with this, I need to do a cheat sheet on date-time values in R.
@@ -30,6 +26,11 @@ y <- function(p) {
   return((1-w)*marks[i]+w*marks[i+1])
 }
 
+# Start with the assumption that the graph is seven inches by seven inches
+# and that mar=c(5.1, 4.1, 4.1, 2.1) and mai=c(1.02, 0.82, 0.82, 0.42)
+# which means 5 lines per inch. Also assume that there are 96 pixels per inch.
+
+
 draw_framework <- function() {
   par(mar=rep(0, 4), xaxs="i", yaxs="i")
   plot(c(-1,7.1), c(-1,7.1), type="n", axes=FALSE)
@@ -38,13 +39,13 @@ draw_framework <- function() {
   polygon(
     x=x(c(300, 400, 400, 300)),
     y=y(c(300, 300, 400, 400)),
-    density=NA, col="olivedrab1", border="black")
+    density=NA, col="olivedrab", border="black")
 
   # user coordinates defined by xlim, ylim
   polygon(
     x=x(c(304, 396, 396, 304)),
     y=y(c(304, 304, 396, 396)),
-    density=NA, col="olivedrab", border="black", lty="dotted")
+    density=NA, col="olivedrab1", border="black", lty="dotted")
 
   axis(side=1, pos=y(300), at=x(c(304, 396)), labels=rep(" ", 2), lwd=3) 
   axis(side=2, pos=x(300), at=y(c(304, 396)), labels=rep(" ", 2), lwd=3) 
@@ -53,126 +54,254 @@ draw_framework <- function() {
 }
 ```
 
+# How Big is My Graph?
 
-The first figure illustrates the margins. Start with the assumption that the graph is seven inches by seven inches and that mar=c(5.1, 4.1, 4.1, 2.1) and mai=c(1.02, 0.82, 0.82, 0.42) which means 5 lines per inch. Also assume that there are 96 pixels per inch.
+## An R Cheatsheet
+
+All functions that open a device for graphics will have height and width arguments to control the size of the graph and a pointsize argument to control the relative font size. In knitr, you control the size of the graph with the chunk options, fig.width and fig.height. This sheet will help you with calculating the size of the graph and various parts of the graph within R.
+
+```{r device_size, fig.width=5.25, fig.height=5.25, echo=FALSE}
+din <- function() {
+  # graphics device size (x)
+  s1 <- "dev.size()[1] (in, cm, px), din[1] (in)"
+  w1 <- strwidth(s1)
+  text    (x(304),    y(150), s1, adj=0)
+  arrows  (x(300),    y(150), x(200), y(150), lwd=3, len=0.05)
+  arrows  (x(308)+w1, y(150), x(500), y(150), lwd=3, len=0.05)
+  segments(x(200),    y(190), x(200), y(110), lwd=3)
+  segments(x(500),    y(190), x(500), y(110), lwd=3)
+  
+  # graphics device size (y)
+  s2 <- "dev.size()[2] (in, cm, px), din[2] (in)"
+  w2 <- strwidth(s2)
+  text    (x(150), y(304), s2, adj=0, srt=90)
+  arrows  (x(150), y(300),    x(150), y(200), lwd=3, len=0.05)
+  arrows  (x(150), y(308)+w2, x(150), y(500), lwd=3, len=0.05)
+  segments(x(190), y(200),    x(110), y(200), lwd=3)
+  segments(x(190), y(500),    x(110), y(500), lwd=3)
+}
+draw_framework()
+din()
+```
+
+## Device size
+
+**dev.size(units)**
+
+**par("din")** *(r.o.)*
+
+Both the **dev.size** function or **par("din")** will tell you the size of the graphics device in inches (including margins), but **par("din")** will not be updated if you resize your graphics window.
+
+The default in **dev.size** is **units="in"** (inches). Type **dev.size(units="px")** or **dev.size(units="cm")** to get the size in pixels or centimeters.
+
+Like many of the other **par** arguments, **din** is read only (r.o.) meaning that you cannot assign a value to it.
 
 ```{r margins, fig.width=5.25, fig.height=5.25, echo=FALSE}
+mar <- function() {
+  # bottom margin
+  arrows  (x(308), y(200), x(308), y(300), lwd=3, length=0.05, code=3)
+  segments(x(308), y(233), x(314), y(233), lwd=3)
+  text(    x(318), y(233), "mai[1] (in), mar[1] (lines)", adj=0, cex=1.0)
+  
+  # top margin
+  arrows  (x(392), y(400), x(392), y(500), lwd=3, length=0.05, code=3)
+  segments(x(392), y(467), x(360), y(467), lwd=3)
+  text    (x(356), y(467), "mai[3] (in), nmar[3] (lines)", adj=1, cex=1.0)
+  
+  # left margin
+  arrows  (x(200), y(392), x(300), y(392), lwd=3, len=0.05, code=3)
+  segments(x(250), y(392), x(250), y(386), lwd=3)
+  text    (x(250), y(382), "mai[2] (in), mar[2] (lines)", adj=1, srt=90)
+  
+  # right margin
+  arrows  (x(400), y(308), x(500), y(308), lwd=3, length=0.05, code=3)
+  segments(x(450), y(308), x(450), y(340), lwd=3)
+  text    (x(450), y(344), "mai[4] (in), mar[4] (lines)", adj=0, srt=90, cex=1.0)
+}
 draw_framework()
-# graphics device size (x)
-s1 <- "dev.size()[1] (in, cm, px), fin[1] (in)"
-w1 <- strwidth(s1)
-text    (x(304),    y(150), s1, adj=0)
-arrows  (x(300),    y(150), x(200), y(150), lwd=3, len=0.05)
-arrows  (x(308)+w1, y(150), x(500), y(150), lwd=3, len=0.05)
-segments(x(200),    y(190), x(200), y(110), lwd=3)
-segments(x(500),    y(190), x(500), y(110), lwd=3)
-
-# graphics device size (y)
-s2 <- "dev.size()[2] (in, cm, px), fin[2] (in)"
-w2 <- strwidth(s2)
-text    (x(150), y(304), s2, adj=0, srt=90)
-arrows  (x(150), y(300),    x(150), y(200), lwd=3, len=0.05)
-arrows  (x(150), y(308)+w2, x(150), y(500), lwd=3, len=0.05)
-segments(x(190), y(200),    x(110), y(200), lwd=3)
-segments(x(190), y(500),    x(110), y(500), lwd=3)
-
-draw_framework()
-# plotting region size (x--pin[1], plt[1], plt[2])
-s3 <- "pin[1] (in)"
-w3 <- strwidth(s3)
-text  (x(312),    y(330), s3, adj=0)
-arrows(x(308),    y(330), x(300), y(330), lwd=3, len=0.05)
-arrows(x(316)+w3, y(330), x(400), y(330), lwd=3, len=0.05)
-
-s4 <- "plt[1] (pct)"
-w4 <- strwidth(s4)
-text    (x(312), y(310), s4, adj=0)
-arrows  (x(200), y(310), x(300),    y(310), lwd=3, len=0.05)
-segments(x(300), y(310), x(308),    y(310), lwd=3, lty="dotted")
-segments(x(500), y(310), x(316)+w4, y(310), lwd=3, lty="dotted")
-
-s5 <- "plt[2] (pct)"
-w5 <- strwidth(s5)
-text    (x(312),    y(320), s5, adj=0)
-segments(x(200),    y(320), x(308), y(320), lwd=3)
-arrows  (x(316)+w5, y(320), x(400), y(320), lwd=3, len=0.05)
-segments(x(400),    y(320), x(500), y(320), lwd=3, lty="dotted")
-
-s6 <- "pin[2] (in)"
-w6 <- strwidth(s6)
-arrows(x(390), y(371)-w6, x(390), y(300), lwd=3, len=0.05)
-arrows(x(390), y(379),    x(390), y(400), lwd=3, len=0.05)
-text  (x(390), y(375), s6, adj=1, srt=90)
-
-# plotting region size (x--pin[1], plt[1], plt[2])
-s7 <- "plt[4] (pct)"
-w7 <- strwidth(s7)
-text    (x(380), y(375), s7, adj=1, srt=90)
-segments(x(380), y(200), x(380), y(371)-w7, lwd=3)
-arrows  (x(380), y(379), x(380), y(400),    lwd=3, len=0.05)
-segments(x(380), y(400), x(380), y(500),    lwd=3, lty="dotted")
-
-s8 <- "plt[3] (pct)"
-w8 <- strwidth(s8)
-text    (x(370), y(375), s8, adj=1, srt=90)
-segments(x(370), y(200), x(370), y(371)-w7, lwd=3, lty="dotted")
-arrows  (x(370), y(200), x(370), y(300),    lwd=3, len=0.05)
-segments(x(370), y(379), x(370), y(500),    lwd=3, lty="dotted")
-
-
-# lower left user coordinates
-arrows  (x(267), y(267), x(300), y(300), lwd=3, len=0.05)
-segments(x(267), y(267), x(308), y(267), lwd=3)
-text    (x(312), y(267), "user[c(1,3)] (user)", adj=0)
-
-# upper right user coordinates
-arrows  (x(433), y(433), x(400), y(400), lwd=3, len=0.05)
-segments(x(433), y(433), x(360), y(433), lwd=3)
-text    (x(356), y(433), "user[c(2,4)] (user)", adj=1)
-
-# bottom margin
-arrows  (x(302), y(200), x(302), y(300), lwd=3, length=0.05, code=3)
-segments(x(302), y(233), x(308), y(233), lwd=3)
-text(    x(312), y(233), "mai[1] (in), mar[1] (lines)", adj=0, cex=1.0)
-
-# top margin
-arrows  (x(398), y(400), x(398), y(500), lwd=3, length=0.05, code=3)
-segments(x(398), y(467), x(360), y(467), lwd=3)
-text    (x(356), y(467), "mai[3] (in), nmar[3] (lines)", adj=1, cex=1.0)
-
-# left margin
-arrows  (x(200), y(398), x(300), y(398), lwd=3, len=0.05, code=3)
-segments(x(250), y(398), x(250), y(392), lwd=3)
-text    (x(250), y(388), "mai[2] (in), mar[2] (lines)", adj=1, srt=90)
-
-# right margin
-arrows  (x(400), y(302), x(500), y(302), lwd=3, length=0.05, code=3)
-segments(x(450), y(302), x(450), y(340), lwd=3)
-text    (x(450), y(344), "mai[4] (in), nmar[4] (lines)", adj=0, srt=90, cex=1.0)
-
+mar()
 ```
 
-```{r string-size, fig.width=2.62, fig.height=2.62}
-par(mar=c(2.1, 2.1, 0.1, 0.1))
-# test
-plot(c(1:10,9:1))
-par("cin")
-par("cra")
+## Margins
+
+**par("mai")**
+
+**par("mar")**
+
+Margins provide you space for your axes, axis, labels, and titles.
+
+Use **par("mai")** to display the size of the four margins (bottom, left, top, right) in inches while **par("mar")** displays the size in lines of text. 
+
+If your axis labels are getting clipped, you can assign wider margins to the **mar** or **mai** parameters.
+
+If your graph has no axes or titles, you can remove the margins (and maximize the plotting region) with
+
+**par(mar=rep(0,4))**
+
+```{r usr, fig.width=5.25, fig.height=5.25, echo=FALSE}
+usr <- function() {
+  # lower left user coordinates
+  arrows  (x(267), y(267), x(300), y(300), lwd=3, len=0.05)
+  segments(x(267), y(267), x(308), y(267), lwd=3)
+  text    (x(312), y(267), "usr[c(1,3)] (user)", adj=0)
+  
+  # upper right user coordinates
+  arrows  (x(433), y(433), x(400), y(400), lwd=3, len=0.05)
+  segments(x(433), y(433), x(360), y(433), lwd=3)
+  text    (x(356), y(433), "usr[c(2,4)] (user)", adj=1)
+}
+draw_framework()
+usr()
+```
+
+## User coordinates
+
+**par("usr")**
+
+User coordinates are the values you use when plotting your data. Run par("usr") to get a vector of length 4 with the user coordinates with the minimum X value, the maximum X value, the minimum Y value, and the maximum Y value.
+
+This normally is not the same as the values specified by the xlim and ylim arguments in plot. By default, R adds and extra 4% to the plotting range so that points right on the edge do not get partially clipped. You can override this using the xaxs="i" and/or the yaxs="i" arguments in par.
+
+
+```{r region, fig.width=5.25, fig.height=5.25, echo=FALSE}
+pin <- function() {
+  # plotting region size (x--pin[1], plt[1], plt[2])
+  s3 <- "pin[1] (in)"
+  w3 <- strwidth(s3)
+  text  (x(312),    y(330), s3, adj=0)
+  arrows(x(308),    y(330), x(300), y(330), lwd=3, len=0.05)
+  arrows(x(316)+w3, y(330), x(400), y(330), lwd=3, len=0.05)
+  
+  s4 <- "plt[1] (pct)"
+  w4 <- strwidth(s4)
+  text    (x(312), y(310), s4, adj=0)
+  arrows  (x(200), y(310), x(300),    y(310), lwd=3, len=0.05)
+  segments(x(300), y(310), x(308),    y(310), lwd=3, lty="dotted")
+  segments(x(500), y(310), x(316)+w4, y(310), lwd=3, lty="dotted")
+  
+  s5 <- "plt[2] (pct)"
+  w5 <- strwidth(s5)
+  text    (x(312),    y(320), s5, adj=0)
+  segments(x(200),    y(320), x(308), y(320), lwd=3)
+  arrows  (x(316)+w5, y(320), x(400), y(320), lwd=3, len=0.05)
+  segments(x(400),    y(320), x(500), y(320), lwd=3, lty="dotted")
+  
+  s6 <- "pin[2] (in)"
+  w6 <- strwidth(s6)
+  arrows(x(390), y(371)-w6, x(390), y(300), lwd=3, len=0.05)
+  arrows(x(390), y(379),    x(390), y(400), lwd=3, len=0.05)
+  text  (x(390), y(375), s6, adj=1, srt=90)
+  
+  # plotting region size (x--pin[1], plt[1], plt[2])
+  s7 <- "plt[4] (pct)"
+  w7 <- strwidth(s7)
+  text    (x(380), y(375), s7, adj=1, srt=90)
+  segments(x(380), y(200), x(380), y(371)-w7, lwd=3)
+  arrows  (x(380), y(379), x(380), y(400),    lwd=3, len=0.05)
+  segments(x(380), y(400), x(380), y(500),    lwd=3, lty="dotted")
+  
+  s8 <- "plt[3] (pct)"
+  w8 <- strwidth(s8)
+  text    (x(370), y(375), s8, adj=1, srt=90)
+  segments(x(370), y(200), x(370), y(371)-w7, lwd=3, lty="dotted")
+  arrows  (x(370), y(200), x(370), y(300),    lwd=3, len=0.05)
+  segments(x(370), y(379), x(370), y(500),    lwd=3, lty="dotted")
+}
+draw_framework()
+pin()
+```
+
+## Plotting region in inches and percent
+
+**par("pin")**
+
+**par("plt")**
+
+Use **par("pin")** to get a vector of length 2 with the size of the plotting region in inches for the X and Y dimensions.
+
+Run **par("plt")** to get the space needed to get to the various edges of the plotting regions from the left/bottom of the graphics 
+
+# All the graphs combined
+
+```{r combined, fig.width=5.25, fig.height=5.25, echo=FALSE}
+draw_framework()
+din()
+usr()
+mar()
+pin()
+```
+
+# String size
+
+```{r string-size, fig.width=5.25, fig.height=5.25, echo=FALSE}
+draw_framework()
+text(x(350), y(350), "Abcde\nFghij\nKlmno\nPqrst\nUvwxy")
+u0 <- strheight("M")
+u1 <- strheight("M\nM") - strheight("M")
+u <- y(350)+c(-2, -1, 0, 1, 2)*u1+0.5*u0
+u <- c(u, u-u0)
+segments(x(308), u, x(392), u, lty="dotted")
+draw_framework()
+text(x(325), y(375), "Abcde\nFghij\nKlmno", cex=2)
+u0 <- strheight("M")
+u1 <- strheight("M\nM") - strheight("M")
+u <- y(375) + c(2, 2, 0, 0, -2, -2)*u1 + c(1, -1, 1, -1, 1, -1)*u0
+segments(x(308), u, x(392), u, lty="dotted")
+u12 <- (u[1]+u[2])/2
+u34 <- (u[3]+u[4])/2
+u56 <- (u[5]+u[6])/2
+text(x(390), u12, 'strheight("M")', adj=1)
+text(x(390), u34, 'strheight("M\\nM")', adj=1)
+text(x(390), u56, 'strheight("M\\nM\\nM")', adj=1)
+```
+
+Test some of these measures.
+
+```{r compare, fig.width=2.62, fig.height=2.62}
+draw_framework()
+par("cxy")[1]
+strwidth("W")
+strwidth("M")
+strwidth("I")
+
+par("cin")[1]
 par("csi")
-par("cxy")
+strwidth("W", units="in")
+strwidth("M", units="in")
+strwidth("I", units="in")
 
-s <- "gh"
-text(10, 5, s, cex=3)
-text( 6, 5, "h", cex=3)
-text( 3, 5, "g", cex=3)
-# test
-x <- 1
-Hi.width.user <- strwidth(s, units="user", cex=3)
-print(Hi.width.user)
-Hi.height.user <- strheight(s, units="user", cex=3)
-print(Hi.height.user)
-x.box <- 10+c(-1,-1,1,1)*Hi.width.user/2
-y.box <-  5+c(-1,1,1,-1)*Hi.height.user/2
-polygon(x=x.box,y=y.box,border="red")
+par("cra")[1]
+strwidth("W", units="figure")
+strwidth("M", units="figure")
+strwidth("I", units="figure")
+
+par("cxy")[2]
+strheight("M")
+strheight("M\nM")
+strheight("M\nM\nM")
+strheight("M\nM") - strheight("M")
+
+par("lheight")
+par("cin")[2]
+strheight("M", units="in")
+strheight("M\nM", units="in")
+strheight("M\nM\nM", units="in")
+strheight("M\nM", units="in") - strheight("M", units="in")
 ```
 
+**par("cin")**
+
+**par("cra")**
+
+**par("csi")**
+
+**par("cxy")**
+
+**strwidth(s, units, cex, font, vfont)**
+
+**strheight(s, units, cex, font, vfont)**
+
+The cin, cra, and cxy arguments to par give the approximate width and height of a single letter in inches, pixels, and user coordinates, respectively. The csi argument gives the height only in inches. These arguments are read only and you cannot use them to change the font size. Since letters like "I" and "M" have different widths, the values produced here are crude approximations at best.
+
+The strwidth and strheight functions give the width and height of a string s in user coordinates (units="user"), inches (units="inches") and as a percentage of the graphics window (units="figure").
+The strwidth function will properly account for narrow and wide letters in a string. The strheight function gives the same value for each letter (the height of the letter "M") and will understate the height of string that has both descending letters (g, p, etc.) and ascending letters (b, d, etc.). For strings that have one or more linefeeds, strheight will calculate size incorporating the line height value (par("lheight")).
