@@ -221,19 +221,9 @@ Use **par("pin")** to get a vector of length 2 with the size of the plotting reg
 
 Run **par("plt")** to get the space needed to get to the various edges of the plotting regions from the left/bottom of the graphics 
 
-# All the graphs combined
-
-```{r combined, fig.width=5.25, fig.height=5.25, echo=FALSE}
-draw_framework()
-din()
-usr()
-mar()
-pin()
-```
-
 # String size
 
-```{r strheight, fig.width=5.25, fig.height=5.25, echo=FALSE}
+```{r strwidth, fig.width=5.25, fig.height=5.25, echo=FALSE}
 draw_multiline <- function() {
 text(x(325), y(378), "Abcde\nFghij\nKlmno", cex=2)
   u0 <<- strheight("M")
@@ -256,26 +246,6 @@ ht <- function() {
   segments(x(350),  u34, x(354),  u34, lwd=3)
   segments(x(345),  u56, x(347),  u56, lwd=3)
 }
-draw_framework()
-draw_multiline()
-ht()
-```
-
-```{r cin2, fig.width=5.25, fig.height=5.25, echo=FALSE}
-cin2 <- function() {
-  text(x(390), u7,  "cin[2] or csi (in), cra[2] (px), cxy[2] (user)", adj=1)
-  arrows  (x(310), u[2], x(310), u[4], lwd=3, len=0.05, code=3)
-  # segments(x(345),  u56, x(347),  u56, lwd=3)
-  segments(x(310),  u34, x(306),  u34, lwd=3)
-  segments(x(306),  u34, x(306),  u7,  lwd=3)
-  segments(x(306),  u7,  x(308),  u7,  lwd=3)
-}
-draw_framework()
-draw_multiline()
-cin2()
-```
-
-```{r strwidth, fig.width=5.25, fig.height=5.25, echo=FALSE}
 wi <- function() {
   text(x(320), y(345), "W", cex=2)
   u <- strwidth("W")
@@ -352,8 +322,34 @@ cin1 <- function() {
   segments(x(320), y(308), x(388)-strwidth(st), y(308), lwd=3)
   # W (5), M(4), L(3), J or v (2.67) x or y or z (2.33) r (1.67), I(1)
 }
+cin2 <- function() {
+  text(x(390), u7,  "cin[2] or csi (in), cra[2] (px), cxy[2] (user)", adj=1)
+  arrows  (x(310), u[2], x(310), u[4], lwd=3, len=0.05, code=3)
+  # segments(x(345),  u56, x(347),  u56, lwd=3)
+  segments(x(310),  u34, x(306),  u34, lwd=3)
+  segments(x(306),  u34, x(306),  u7,  lwd=3)
+  segments(x(306),  u7,  x(308),  u7,  lwd=3)
+}
 draw_framework()
 draw_multiline()
+cin2()
+cin1()
+```
+
+
+# All the graphs combined
+
+```{r combined, fig.width=5.25, fig.height=5.25, echo=FALSE}
+draw_framework()
+din()
+usr()
+mar()
+pin()
+
+draw_framework()
+draw_multiline()
+ht()
+wi()
 cin2()
 cin1()
 ```
