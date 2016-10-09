@@ -233,90 +233,129 @@ pin()
 
 # String size
 
-```{r string-size, fig.width=5.25, fig.height=5.25, echo=FALSE}
+```{r strheight, fig.width=5.25, fig.height=5.25, echo=FALSE}
+draw_multiline <- function() {
+text(x(325), y(378), "Abcde\nFghij\nKlmno", cex=2)
+  u0 <<- strheight("M")
+  u1 <<- strheight("M\nM") - strheight("M")
+  u  <<- y(378) + c(2, 2, 0, 0, -2, -2)*u1 + c(1, -1, 1, -1, 1, -1)*u0
+  u12 <<- (u[1]+u[2])/2
+  u34 <<- (u[3]+u[4])/2
+  u56 <<- (u[5]+u[6])/2
+  u7  <<- u[6]-u0
+  segments(x(308), u, x(392), u, lty="dotted")
+}
+ht <- function() {
+  text(x(390), u12, 'strheight("M")', adj=1)
+  text(x(390), u34, 'strheight("M\\nM")', adj=1)
+  text(x(390), u56, 'strheight("M\\nM\\nM")', adj=1)
+  arrows  (x(355), u[1], x(355), u[2], lwd=3, len=0.05, code=3)
+  arrows  (x(350), u[1], x(350), u[4], lwd=3, len=0.05, code=3)
+  arrows  (x(345), u[1], x(345), u[6], lwd=3, len=0.05, code=3)
+  segments(x(355),  u12, x(362),  u12, lwd=3)
+  segments(x(350),  u34, x(354),  u34, lwd=3)
+  segments(x(345),  u56, x(347),  u56, lwd=3)
+}
 draw_framework()
-text(x(350), y(350), "Abcde\nFghij\nKlmno\nPqrst\nUvwxy")
-u0 <- strheight("M")
-u1 <- strheight("M\nM") - strheight("M")
-u <- y(350)+c(-2, -1, 0, 1, 2)*u1+0.5*u0
-u <- c(u, u-u0)
-segments(x(308), u, x(392), u, lty="dotted")
+draw_multiline()
+ht()
+```
+
+```{r cin2, fig.width=5.25, fig.height=5.25, echo=FALSE}
+cin2 <- function() {
+  text(x(390), u7,  "cin[2] or csi (in), cra[2] (px), cxy[2] (user)", adj=1)
+  arrows  (x(310), u[2], x(310), u[4], lwd=3, len=0.05, code=3)
+  # segments(x(345),  u56, x(347),  u56, lwd=3)
+  segments(x(310),  u34, x(306),  u34, lwd=3)
+  segments(x(306),  u34, x(306),  u7,  lwd=3)
+  segments(x(306),  u7,  x(308),  u7,  lwd=3)
+}
 draw_framework()
-text(x(325), y(375), "Abcde\nFghij\nKlmno", cex=2)
-u0 <- strheight("M")
-u1 <- strheight("M\nM") - strheight("M")
-u <- y(375) + c(2, 2, 0, 0, -2, -2)*u1 + c(1, -1, 1, -1, 1, -1)*u0
-segments(x(308), u, x(392), u, lty="dotted")
-u12 <- (u[1]+u[2])/2
-u34 <- (u[3]+u[4])/2
-u56 <- (u[5]+u[6])/2
-u7 <- u[6]-u1
-text(x(390), u12, 'strheight("M")', adj=1)
-text(x(390), u34, 'strheight("M\\nM")', adj=1)
-text(x(390), u56, 'strheight("M\\nM\\nM")', adj=1)
-text(x(390), u7,  "cin[2] or csi (in), cra[2] (px), cxy[2] (user)", adj=1)
-arrows  (x(355), u[1], x(355), u[2], lwd=3, len=0.05, code=3)
-arrows  (x(350), u[1], x(350), u[4], lwd=3, len=0.05, code=3)
-arrows  (x(345), u[1], x(345), u[6], lwd=3, len=0.05, code=3)
-arrows  (x(310), u[2], x(310), u[4], lwd=3, len=0.05, code=3)
-segments(x(355),  u12, x(362),  u12, lwd=3)
-segments(x(350),  u34, x(354),  u34, lwd=3)
-segments(x(345),  u56, x(347),  u56, lwd=3)
-segments(x(345),  u56, x(347),  u56, lwd=3)
-segments(x(310),  u34, x(306),  u34, lwd=3)
-segments(x(306),  u34, x(306),  u7,  lwd=3)
-segments(x(306),  u7,  x(308),  u7,  lwd=3)
+draw_multiline()
+cin2()
+```
 
-text(x(320), y(340), "W", cex=2)
-u <- strwidth("W")
-v <- strheight("W")
-segments(x(320)-u, y(340)+1.5*v, x(320)-u,  y(340)-2.0*v, lty="dotted")
-segments(x(320)+u, y(340)+1.5*v, x(320)+u,  y(340)-2.0*v, lty="dotted")
-arrows  (x(320)+u, y(320)-1.5*v, x(320)-u,  y(320)-1.5*v, len=0.05, lwd=3, code=3)
+```{r strwidth, fig.width=5.25, fig.height=5.25, echo=FALSE}
+wi <- function() {
+  text(x(320), y(345), "W", cex=2)
+  u <- strwidth("W")
+  v <- strheight("W")
+  segments(x(320)-u, y(345)+1.5*v, x(320)-u,  y(345)-2.0*v, lty="dotted")
+  segments(x(320)+u, y(345)+1.5*v, x(320)+u,  y(345)-2.0*v, lty="dotted")
+  arrows  (x(320)+u, y(345)-1.5*v, x(320)-u,  y(345)-1.5*v, len=0.05, lwd=3, code=3)
+  segments(x(320), y(345)-1.5*v, x(320), y(335)+0.5*v, lwd=3)
+  
+  text(x(340), y(345), "L", cex=2)
+  u <- strwidth("L")
+  segments(x(340)-u, y(345)+1.5*v, x(340)-u,  y(345)-2.0*v, lty="dotted")
+  segments(x(340)+u, y(345)+1.5*v, x(340)+u,  y(345)-2.0*v, lty="dotted")
+  arrows  (x(340)+u, y(345)-1.5*v, x(340)-u,  y(345)-1.5*v, len=0.05, lwd=3, code=3)
+  segments(x(340), y(345)-1.5*v, x(340), y(330)+0.5*v, lwd=3)
+  
+  text(x(360), y(345), "v", cex=2)
+  u <- strwidth("v")
+  segments(x(360)-u, y(345)+1.5*v, x(360)-u,  y(345)-2.0*v, lty="dotted")
+  segments(x(360)+u, y(345)+1.5*v, x(360)+u,  y(345)-2.0*v, lty="dotted")
+  arrows  (x(360)+u, y(345)-1.5*v, x(360)-u,  y(345)-1.5*v, len=0.05, lwd=3, code=3)
+  segments(x(360), y(345)-1.5*v, x(360), y(335)+0.5*v, lwd=3)
+  
+  text(x(380), y(345), "i", cex=2)
+  u <- strwidth("i")
+  segments(x(380)-u, y(345)+1.5*v, x(380)-u,  y(345)-2.0*v, lty="dotted")
+  segments(x(380)+u, y(345)+1.5*v, x(380)+u,  y(345)-2.0*v, lty="dotted")
+  arrows  (x(380)+u, y(345)-1.5*v, x(380)-u,  y(345)-1.5*v, len=0.05, lwd=3, code=3)
+  segments(x(380), y(345)-1.5*v, x(380), y(330)+0.5*v, lwd=3)
 
-text(x(340), y(340), "L", cex=2)
-u <- strwidth("L")
-segments(x(340)-u, y(340)+1.5*v, x(340)-u,  y(340)-2.0*v, lty="dotted")
-segments(x(340)+u, y(340)+1.5*v, x(340)+u,  y(340)-2.0*v, lty="dotted")
-arrows  (x(340)+u, y(340)-1.5*v, x(340)-u,  y(340)-1.5*v, len=0.05, lwd=3, code=3)
+  text(x(320), y(335), 'strwidth("W")')
+  text(x(340), y(330), 'strwidth("L")')
+  text(x(360), y(335), 'strwidth("v")')
+  text(x(380), y(330), 'strwidth("i")')
+}
+draw_framework()
+draw_multiline()
+ht()
+wi()
+```
 
-text(x(360), y(340), "v", cex=2)
-u <- strwidth("v")
-segments(x(360)-u, y(340)+1.5*v, x(360)-u,  y(340)-2.0*v, lty="dotted")
-segments(x(360)+u, y(340)+1.5*v, x(360)+u,  y(340)-2.0*v, lty="dotted")
-arrows  (x(360)+u, y(340)-1.5*v, x(360)-u,  y(340)-1.5*v, len=0.05, lwd=3, code=3)
-
-text(x(380), y(340), "i", cex=2)
-u <- strwidth("i")
-segments(x(380)-u, y(340)+1.5*v, x(380)-u,  y(340)-2.0*v, lty="dotted")
-segments(x(380)+u, y(340)+1.5*v, x(380)+u,  y(340)-2.0*v, lty="dotted")
-arrows  (x(380)+u, y(340)-1.5*v, x(380)-u,  y(340)-1.5*v, len=0.05, lwd=3, code=3)
-
-u <- par("cxy")[1]
-
-text(x(320), y(320), "W", cex=2)
-segments(x(320)-u, y(320)+1.5*v, x(320)-u,  y(320)-2.0*v, lty="dotted")
-segments(x(320)+u, y(320)+1.5*v, x(320)+u,  y(320)-2.0*v, lty="dotted")
-arrows  (x(320)+u, y(340)-1.5*v, x(320)-u,  y(340)-1.5*v, len=0.05, lwd=3, code=3)
-
-
-text(x(340), y(320), "L", cex=2)
-segments(x(340)-u, y(320)+1.5*v, x(340)-u,  y(320)-2.5*v, lty="dotted")
-segments(x(340)+u, y(320)+1.5*v, x(340)+u,  y(320)-2.5*v, lty="dotted")
-
-text(x(360), y(320), "v", cex=2)
-segments(x(360)-u, y(320)+1.5*v, x(360)-u,  y(320)-2.5*v, lty="dotted")
-segments(x(360)+u, y(320)+1.5*v, x(360)+u,  y(320)-2.5*v, lty="dotted")
-
-text(x(380), y(320), "i", cex=2)
-segments(x(380)-u, y(320)+1.5*v, x(380)-u,  y(320)-2.0*v, lty="dotted")
-segments(x(380)+u, y(320)+1.5*v, x(380)+u,  y(320)-2.0*v, lty="dotted")
-arrows  (x(380)+u, y(320)-1.5*v, x(380)-u,  y(320)-1.5*v, len=0.05, lwd=3, code=3)
-
-text(x(390), y(330), "strwidth", adj=1)
-text(x(390), y(310), "cin[1] (in), cra[1] (px), cxy[1] (user)", adj=1)
-
-# W (5), M(4), L(3), J or v (2.67) x or y or z (2.33) r (1.67), I(1)
+```{r cin1, fig.width=5.25, fig.height=5.25, echo=FALSE}
+cin1 <- function() {
+  u <- par("cxy")[1]
+  v <- strheight("W")
+  
+  text(x(320), y(320), "W", cex=2)
+  segments(x(320)-u, y(320)+1.5*v, x(320)-u,  y(320)-2.0*v, lty="dotted")
+  segments(x(320)+u, y(320)+1.5*v, x(320)+u,  y(320)-2.0*v, lty="dotted")
+  arrows  (x(320)+u, y(320)-1.5*v, x(320)-u,  y(320)-1.5*v, len=0.05, lwd=3, code=3)
+  segments(x(320), y(320)-1.5*v, x(320), y(308), lwd=3)
+  
+  text(x(340), y(320), "L", cex=2)
+  segments(x(340)-u, y(320)+1.5*v, x(340)-u,  y(320)-2.0*v, lty="dotted")
+  segments(x(340)+u, y(320)+1.5*v, x(340)+u,  y(320)-2.0*v, lty="dotted")
+  arrows  (x(340)+u, y(320)-1.5*v, x(340)-u,  y(320)-1.5*v, len=0.05, lwd=3, code=3)
+  segments(x(340), y(320)-1.5*v, x(340), y(312), lwd=3)
+  
+  text(x(360), y(320), "v", cex=2)
+  segments(x(360)-u, y(320)+1.5*v, x(360)-u,  y(320)-2.0*v, lty="dotted")
+  segments(x(360)+u, y(320)+1.5*v, x(360)+u,  y(320)-2.0*v, lty="dotted")
+  arrows  (x(360)+u, y(320)-1.5*v, x(360)-u,  y(320)-1.5*v, len=0.05, lwd=3, code=3)
+  segments(x(360), y(320)-1.5*v, x(360), y(312), lwd=3)
+  
+  text(x(380), y(320), "i", cex=2)
+  segments(x(380)-u, y(320)+1.5*v, x(380)-u,  y(320)-2.0*v, lty="dotted")
+  segments(x(380)+u, y(320)+1.5*v, x(380)+u,  y(320)-2.0*v, lty="dotted")
+  arrows  (x(380)+u, y(320)-1.5*v, x(380)-u,  y(320)-1.5*v, len=0.05, lwd=3, code=3)
+  segments(x(380), y(320)-1.5*v, x(380), y(312), lwd=3)
+  
+  st <- "cin[1] (in), cra[1] (px), cxy[1] (user)"
+  text(x(390), y(308), st, adj=1)
+  segments(x(320), y(312), x(380), y(312), lwd=3)
+  segments(x(320), y(308), x(388)-strwidth(st), y(308), lwd=3)
+  # W (5), M(4), L(3), J or v (2.67) x or y or z (2.33) r (1.67), I(1)
+}
+draw_framework()
+draw_multiline()
+cin2()
+cin1()
 ```
 
 Test some of these measures.
