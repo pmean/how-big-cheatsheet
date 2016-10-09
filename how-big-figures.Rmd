@@ -270,13 +270,51 @@ segments(x(306),  u7,  x(308),  u7,  lwd=3)
 text(x(320), y(340), "W", cex=2)
 u <- strwidth("W")
 v <- strheight("W")
-segments(x(320)-u, y(340)+2*v, x(320)-u,  y(340)-3*v, lty="dotted")
-segments(x(320)+u, y(340)+2*v, x(320)+u,  y(340)-3*v, lty="dotted")
-text(x(340), y(340), "I", cex=2)
-u <- strwidth("I")
-v <- strheight("I")
-segments(x(340)-u, y(340)+2*v, x(340)-u,  y(340)-3*v, lty="dotted")
-segments(x(340)+u, y(340)+2*v, x(340)+u,  y(340)-3*v, lty="dotted")
+segments(x(320)-u, y(340)+1.5*v, x(320)-u,  y(340)-2.0*v, lty="dotted")
+segments(x(320)+u, y(340)+1.5*v, x(320)+u,  y(340)-2.0*v, lty="dotted")
+arrows  (x(320)+u, y(320)-1.5*v, x(320)-u,  y(320)-1.5*v, len=0.05, lwd=3, code=3)
+
+text(x(340), y(340), "L", cex=2)
+u <- strwidth("L")
+segments(x(340)-u, y(340)+1.5*v, x(340)-u,  y(340)-2.0*v, lty="dotted")
+segments(x(340)+u, y(340)+1.5*v, x(340)+u,  y(340)-2.0*v, lty="dotted")
+arrows  (x(340)+u, y(340)-1.5*v, x(340)-u,  y(340)-1.5*v, len=0.05, lwd=3, code=3)
+
+text(x(360), y(340), "v", cex=2)
+u <- strwidth("v")
+segments(x(360)-u, y(340)+1.5*v, x(360)-u,  y(340)-2.0*v, lty="dotted")
+segments(x(360)+u, y(340)+1.5*v, x(360)+u,  y(340)-2.0*v, lty="dotted")
+arrows  (x(360)+u, y(340)-1.5*v, x(360)-u,  y(340)-1.5*v, len=0.05, lwd=3, code=3)
+
+text(x(380), y(340), "i", cex=2)
+u <- strwidth("i")
+segments(x(380)-u, y(340)+1.5*v, x(380)-u,  y(340)-2.0*v, lty="dotted")
+segments(x(380)+u, y(340)+1.5*v, x(380)+u,  y(340)-2.0*v, lty="dotted")
+arrows  (x(380)+u, y(340)-1.5*v, x(380)-u,  y(340)-1.5*v, len=0.05, lwd=3, code=3)
+
+u <- par("cxy")[1]
+
+text(x(320), y(320), "W", cex=2)
+segments(x(320)-u, y(320)+1.5*v, x(320)-u,  y(320)-2.0*v, lty="dotted")
+segments(x(320)+u, y(320)+1.5*v, x(320)+u,  y(320)-2.0*v, lty="dotted")
+arrows  (x(320)+u, y(340)-1.5*v, x(320)-u,  y(340)-1.5*v, len=0.05, lwd=3, code=3)
+
+
+text(x(340), y(320), "L", cex=2)
+segments(x(340)-u, y(320)+1.5*v, x(340)-u,  y(320)-2.5*v, lty="dotted")
+segments(x(340)+u, y(320)+1.5*v, x(340)+u,  y(320)-2.5*v, lty="dotted")
+
+text(x(360), y(320), "v", cex=2)
+segments(x(360)-u, y(320)+1.5*v, x(360)-u,  y(320)-2.5*v, lty="dotted")
+segments(x(360)+u, y(320)+1.5*v, x(360)+u,  y(320)-2.5*v, lty="dotted")
+
+text(x(380), y(320), "i", cex=2)
+segments(x(380)-u, y(320)+1.5*v, x(380)-u,  y(320)-2.0*v, lty="dotted")
+segments(x(380)+u, y(320)+1.5*v, x(380)+u,  y(320)-2.0*v, lty="dotted")
+arrows  (x(380)+u, y(320)-1.5*v, x(380)-u,  y(320)-1.5*v, len=0.05, lwd=3, code=3)
+
+text(x(390), y(330), "strwidth", adj=1)
+text(x(390), y(310), "cin[1] (in), cra[1] (px), cxy[1] (user)", adj=1)
 
 # W (5), M(4), L(3), J or v (2.67) x or y or z (2.33) r (1.67), I(1)
 ```
