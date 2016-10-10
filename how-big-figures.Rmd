@@ -287,6 +287,22 @@ ht()
 wi()
 ```
 
+## String size
+
+**strwidth()**
+
+**strheight()**
+
+The text that appears inside your plot (e.g, with the **text()** function) or that appears outside your plot (e.g., your title and axis labels) can vary substantially from one plot to another.
+
+The **strwidth** and **strheight** functions will tell you the size of a specified string in inches (**units="inches"**), user coordinates (**units="user"**) or as a percentage of the graphics device (**units="figure"**).
+
+For a single line of text, **strheight** will give you the height of the letter "M". Watch out as the vertical size of a string will not count the part that letters that descend below the baseline (e.g., "g" or "j").
+
+If you have a string with one of more linebreaks ("\n"), the **strheight** function will measure the height of the letter "M" plus the height of one or more additional lines. The height of a line is dependent on the line spacing, set by the **lheight** argument of **par**. The default line height (**lheight=1**), corresponding to single spaced lines, produces a line height equal to 1.6 times the height of "M".
+
+The **strwidth** function will produce different widths to individual characters, representing the proportional spacing used by most fonts (a "W" using much more space than an "i"). For the width of a string, the **strwidth** function will sum up the lengths of the individual characters in the string.
+
 ```{r cin1, fig.width=5.25, fig.height=5.25, echo=FALSE}
 cin1 <- function() {
   u <- par("cxy")[1]
@@ -336,6 +352,19 @@ cin2()
 cin1()
 ```
 
+**par("cin")** *(r.o.)*
+
+**par("csi")** *(r.o.)*
+
+**par("cra")** *(r.o.)*
+
+**par("cxy")** *(r.o.)*
+
+You can query the approximate size of individual characters using various **par** arguments. Three of these arguments, cin, cra, and cxy, give the size of the width and height as a vector of length 2. The csi argument gives the height only.
+
+The height is the height of a line and the width is the same
+
+
 
 # All the graphs combined
 
@@ -353,6 +382,12 @@ wi()
 cin2()
 cin1()
 ```
+
+**par("fin")**
+
+**par("fig")**
+
+fin (inches), fig (pct)
 
 Test some of these measures.
 
