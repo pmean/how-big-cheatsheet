@@ -86,15 +86,19 @@ din()
 
 ## Device size
 
-**dev.size(units)**
+**dev.size(units)** (width, height) 
 
-**par("din")** *(r.o.)*
+**par("din")** *(r.o.)* (width, height) in inches
 
-Both the **dev.size** function or **par("din")** will tell you the size of the graphics device in inches (including margins), but **par("din")** will not be updated if you resize your graphics window.
+Both the **dev.size** function or **par("din")** will tell you the size of the graphics device, but **par("din")** will not be updated if you resize your graphics window. The **dev.size** function will report the size in
 
-The default in **dev.size** is **units="in"** (inches). Type **dev.size(units="px")** or **dev.size(units="cm")** to get the size in pixels or centimeters.
+1. inches (**unit="in"**), the default
 
-Like many of the other **par** arguments, **din** is read only (r.o.) meaning that you cannot assign a value to it.
+2. centimeters (**units="cm"**)
+
+3. pixels (**units="px"**)
+
+Like several other **par** arguments, **din** is read only (r.o.) meaning that you cannot assign a value to it.
 
 ```{r margins, fig.width=5.25, fig.height=5.25, echo=FALSE}
 mar <- function() {
@@ -124,19 +128,41 @@ mar()
 
 ## Margins
 
-**par("mai")**
+**par("mai")** -> (bottom, left, top, right) in inches
 
-**par("mar")**
+**par("mar")** -> (bottom, left, top, right) in lines
 
 Margins provide you space for your axes, axis, labels, and titles.
-
-Use **par("mai")** to display the size of the four margins (bottom, left, top, right) in inches while **par("mar")** displays the size in lines of text. 
-
-If your axis labels are getting clipped, you can assign wider margins to the **mar** or **mai** parameters.
 
 If your graph has no axes or titles, you can remove the margins (and maximize the plotting region) with
 
 **par(mar=rep(0,4))**
+
+## Help!! My title or axis labels won't fit.
+
+There are several possible solutions.
+
+1. You can assign wider margins using the **mar** or **mai** argument in **par**.
+
+2. You can change the orientation of the axis labels with the **las**. Choose among 
+
+a. **las=0** both axis labels parallel
+
+b. **las=1** both axis labels horizontal
+
+c. **las=2** both axis labels perpendicular
+
+d. **las=3** both axis labels vertical
+
+3. change the relative size of the font
+
+a. **cex.axis** for the tick mark labels.
+
+b. **cex.lab** for **xlab** and **ylab**.
+
+c. **cex.main** for the main title
+
+d. **cex.sub** for the subtitle.
 
 ```{r usr, fig.width=5.25, fig.height=5.25, echo=FALSE}
 usr <- function() {
@@ -156,11 +182,9 @@ usr()
 
 ## User coordinates
 
-**par("usr")**
+**par("usr")** -> (xmin, ymin, xmax, ymax)
 
-User coordinates are the values you use when plotting your data. Run par("usr") to get a vector of length 4 with the user coordinates with the minimum X value, the maximum X value, the minimum Y value, and the maximum Y value.
-
-This normally is not the same as the values specified by the xlim and ylim arguments in plot. By default, R adds and extra 4% to the plotting range so that points right on the edge do not get partially clipped. You can override this using the xaxs="i" and/or the yaxs="i" arguments in par.
+User coordinates are the values you use when plotting your data. Run par("usr") to get a vector of length 4 with the user coordinates with the minimum X value, the maximum X value, the minimum Y value, and the maximum Y value. This normally is not the same as the values specified by the xlim and ylim arguments in plot. By default, R adds and extra 4% to the plotting range so that points right on the edge do not get partially clipped. You can override this using the **xaxs="i"** and/or the **yaxs="i"** arguments in par.
 
 
 ```{r region, fig.width=5.25, fig.height=5.25, echo=FALSE}
@@ -213,13 +237,17 @@ pin()
 
 ## Plotting region in inches and percent
 
-**par("pin")**
+**par("pin")** -> (width, height) in inches
 
-**par("plt")**
+**par("plt")** -> (left, right, bottom, top) in percent
 
-Use **par("pin")** to get a vector of length 2 with the size of the plotting region in inches for the X and Y dimensions.
+The **pin** argument in **par** gives you the size of the plotting region (the size of the device minus the size of the margins) in inches.
 
-Run **par("plt")** to get the space needed to get to the various edges of the plotting regions from the left/bottom of the graphics 
+The **plt** argument gives you the percentage of the device up to the left edge of the plotting region, the right edge, the bottom edge, and the top edge. The first and third values are equivalent to the percentage of space deveoted to the left and bottom margins. Subtract the second and fourth values from 1 to get the percentage of space devoted to the right and top margins.
+
+## Getting a square graph
+
+You can produce a square graph manually by setting the width and height to the same value and setting the margins so that the sum of the top and bottom margins equal the sum of the left and right margins. But a much easier way is to specify **pty="s"**, which adjusts the margins so that the size of the plotting region is always square, even if you resize the graphics window.
 
 # String size
 
