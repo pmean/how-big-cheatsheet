@@ -164,6 +164,46 @@ c. **cex.main** for the main title
 
 d. **cex.sub** for the subtitle.
 
+```{r las, fig.width=2.62, fig.height=2.62, echo=FALSE}
+par(mar=rep(0,4))
+plot(c(100, 200), c(100, 200), type="n", axes=FALSE)
+u0 <- 116
+u <- u0+c(  0, 13, 26)
+v0 <- u0+50
+v <- u+50
+par(las=2)
+axis(side=1, pos=u0, at=u, labels=c("las","=","2"))
+axis(side=2, pos=u0, at=u, labels=c("2","=","las"))
+par(las=3)
+axis(side=1, pos=u0, at=v, labels=c("las","=","3"))
+axis(side=2, pos=v0, at=u, labels=c("las","=","3"))
+par(las=0)
+axis(side=1, pos=v0, at=u, labels=c("las","=","0"))
+axis(side=2, pos=u0, at=v, labels=c("las","=","0"))
+par(las=1)
+axis(side=1, pos=v0, at=v, labels=c("las","=","1"))
+axis(side=2, pos=v0, at=v, labels=c("1","=","las"))
+```
+
+Expanding or shrinking the margins and titles.
+
+```{r cex, fig.width=2.62, fig.height=2.62, echo=FALSE}
+par(mar=rep(0,4), xaxs="i", yaxs="i")
+plot(c(90, 210), c(90, 210), type="n", axes=FALSE)
+u0 <- 127
+u <- u0+c(0, 34, 68)
+par(las=0)
+lb <- c(" cex.axis", "cex.axis", "cex.axis")
+axis(side=1, pos=u0, at=u, labels=lb)
+axis(side=2, pos=u0, at=u, labels=lb)
+text(106, u[2], "cex.lab", srt=90)
+text(u[2], 205, "cex.main")
+text(u[2], 103, "cex.lab")
+text(u[2],  93, "cex.sub")
+```
+
+## usr
+
 ```{r usr, fig.width=5.25, fig.height=5.25, echo=FALSE}
 usr <- function() {
   # lower left user coordinates
@@ -248,6 +288,27 @@ The **plt** argument gives you the percentage of the device up to the left edge 
 ## Getting a square graph
 
 You can produce a square graph manually by setting the width and height to the same value and setting the margins so that the sum of the top and bottom margins equal the sum of the left and right margins. But a much easier way is to specify **pty="s"**, which adjusts the margins so that the size of the plotting region is always square, even if you resize the graphics window.
+
+## measuring pixels per user corodinate values
+
+For many applications, you need to be able to translate user coordinates to pixels.
+
+# Range in user coordinates
+x.range <- par(“usr”)[2] – par(“usr”)[1]
+y.range <- par(“usr”)[4] – par(“usr”)[3]
+
+# Percentage used by plotting region
+x.pct <- par(“plt”)[2] – par(“plt”)[1]
+y.pct <- par(“plt”)[4] – par(“plt”)[3]
+
+# Number of pixels in plotting region
+x.px <- x.pct*dev.size(units=“px”)[1]
+y.px <- y.pct*dev.size(units=“px”)[2]
+
+# Number of pixels per user coordinate
+x.px.per.usr <- x.px / x.range
+y.px.per.usr <- y.px / y.range
+
 
 # String size
 
