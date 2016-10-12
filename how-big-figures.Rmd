@@ -294,21 +294,36 @@ You can produce a square graph manually by setting the width and height to the s
 For many applications, you need to be able to translate user coordinates to pixels.
 
 # Range in user coordinates
-x.range <- par(“usr”)[2] – par(“usr”)[1]
-y.range <- par(“usr”)[4] – par(“usr”)[3]
+x.range <- par("usr")[2] - par("usr")[1]
+y.range <- par("usr")[4] - par("usr")[3]
 
 # Percentage used by plotting region
-x.pct <- par(“plt”)[2] – par(“plt”)[1]
-y.pct <- par(“plt”)[4] – par(“plt”)[3]
+x.pct <- par("plt")[2] - par("plt")[1]
+y.pct <- par("plt")[4] - par("plt")[3]
 
 # Number of pixels in plotting region
-x.px <- x.pct*dev.size(units=“px”)[1]
-y.px <- y.pct*dev.size(units=“px”)[2]
+x.px <- x.pct*dev.size(units="px")[1]
+y.px <- y.pct*dev.size(units="px")[2]
 
 # Number of pixels per user coordinate
 x.px.per.usr <- x.px / x.range
 y.px.per.usr <- y.px / y.range
 
+# There are some short-cuts
+px.per.usr <- par("cra") / par("cxy")
+
+## Drawing a true circle
+
+```{r true_circle, fig.width=7, fig.height=5, echo=FALSE}
+plot(1:20, 10*c(1:10,10:1), xlab=" ", ylab=" ")
+pi.seq <- seq(0, 2*pi, length=100)
+x0 <- 10
+y0 <- 50
+r  <-  2
+x.circle <- x0 + r * cos(pi.seq)
+y.circle <- y0 + r * sin(pi.seq)
+lines(x.circle, y.circle)
+```
 
 # String size
 
