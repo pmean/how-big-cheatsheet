@@ -322,7 +322,36 @@ y0 <- 50
 r  <-  2
 x.circle <- x0 + r * cos(pi.seq)
 y.circle <- y0 + r * sin(pi.seq)
-lines(x.circle, y.circle)
+lines(x.circle, y.circle, lty="dotted")
+
+# Range in user coordinates
+x.range <- par("usr")[2] - par("usr")[1]
+y.range <- par("usr")[4] - par("usr")[3]
+
+# Percentage used by plotting region
+x.pct <- par("plt")[2] - par("plt")[1]
+y.pct <- par("plt")[4] - par("plt")[3]
+
+# Number of pixels in plotting region
+x.px <- x.pct*dev.size(units="px")[1]
+y.px <- y.pct*dev.size(units="px")[2]
+
+# Number of pixels per user coordinate
+x.px.per.usr <- x.px / x.range
+y.px.per.usr <- y.px / y.range
+
+print(x.px.per.usr)
+print(y.px.per.usr)
+
+r <- 20
+x.circle <- x0 + r / x.px.per.usr * cos(pi.seq)
+y.circle <- y0 + r / y.px.per.usr * sin(pi.seq)
+lines(x.circle, y.circle, col="red")
+
+r <- 1/20
+x.circle <- x0 + r / x.px.per.usr * cos(pi.seq)
+y.circle <- y0 + r / y.px.per.usr * sin(pi.seq)
+lines(x.circle, y.circle, col="blue")
 ```
 
 # String size
