@@ -5,18 +5,19 @@ date: "October 13, 2016"
 output: html_document
 ---
 
-When you try to draw a circle on a graph, it often ends up looking like an ellipse. Here's an example.Drawing a circle on a graph do
+When you try to draw a circle on a graph, it often ends up looking like an ellipse. Here's an example.
 
-```{r ellipse}
+```{r not-so-perfect-circle}
+draw <- function(x0, y0, r, ...) {
+  # draw a circle of radius r centered at x0, y0
+  pi.seq <- seq(0, 2*pi, length=100)
+  x.circle <- x0 + r * cos(pi.seq)
+  y.circle <- y0 + r * sin(pi.seq)
+  polygon(x.circle, y.circle, ...)
+}
 par(mar=c(4.6, 4.6, 0.6, 0.6))
 plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
-pi.seq <- seq(0, 2*pi, length=100)
-x0 <- 10
-y0 <- 50
-r  <-  2
-x.circle <- x0 + r * cos(pi.seq)
-y.circle <- y0 + r * sin(pi.seq)
-lines(x.circle, y.circle, lty="dotted")
+draw(10, 50, 2, lty="dotted")
 dev.size()
 ```
 
@@ -28,7 +29,9 @@ There are three things that are contributing to this problem.
 
 3. The number of units on this graph are different for the x-axis and the y-axis.
 
-To draw a circle properly, you need to measure
+It's not necessarily bad to see an ellipse where you were expecting a circle. But if you do want a perfect circle, you need to calculate the size of the plotting region and adjust appropriately.
+
+To draw a perfect circle, you need to measure
 
 1. the range of the x-axis and y-axis, and
 
@@ -37,32 +40,106 @@ To draw a circle properly, you need to measure
 3. (optionally) the number of pixels per inch.
 
 ```{r half-inch-circle}
+draw <- function(x0, y0, r, units="in", verbose=TRUE, ...) {
+  r <- 0.5
+  x.circle <- x0 + r * x.usr.per.in * cos(pi.seq)
+  y.circle <- y0 + r * y.usr.per.in * sin(pi.seq)
+  lines(x.circle, y.circle, col="red")
+}
+adjust(units="in", verbose=TRUE) {
+  # Range in user coordinates
+  x.range <- par("usr")[2] - par("usr")[1]
+  y.range <- par("usr")[4] - par("usr")[3]
+  
+  print(paste("The user range is", x.range, y.range))
+  
+  # Number of inches in plotting region
+  x.inches <- par("pin")[1]
+  y.inches <- par("pin")[2]
+  
+  print(paste("The size of the plotting region is", x.inches, y.inches, "inches"))
+  
+  # Number of inches per user coordinate
+  x.usr.per.in <- x.range / x.inches
+  y.usr.per.in <- y.range / y.inches
+  
+  print(paste("Each inch is equivalent to", x.usr.per.in, y.usr.per.in, "user coordinates"))
+  return(c(x.usr.per.in, y.usr.per.in))
+}
 plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
-
-# Range in user coordinates
-x.range <- par("usr")[2] - par("usr")[1]
-y.range <- par("usr")[4] - par("usr")[3]
-
-print(paste("The user range is", x.range, y.range))
-
-# Number of pixels in plotting region
-x.inches <- par("pin")[1]
-y.inches <- par("pin")[2]
-
-print(paste("The size of the plotting region is", x.inches, y.inches, "inches"))
-
-# Number of pixels per user coordinate
-x.usr.per.in <- x.range / x.inches
-y.usr.per.in <- y.range / y.inches
-
-print(paste("Each inch is equivalent to", x.usr.per.in, y.usr.per.in, "user coordinates"))
-
-r <- 0.5
-x.circle <- x0 + r * x.usr.per.in * cos(pi.seq)
-y.circle <- y0 + r * y.usr.per.in * sin(pi.seq)
-lines(x.circle, y.circle, col="red")
 title("A circle with a half inch radius")
 
 ```
 
 The concept of inches in a graph is a loose one at best. The half inch radius shown above might appears slightly bigger or slightly smaller than a half inch and it will probably change when you move from one computer monitor to another. The size will probably change when you print this graph.
+
+If you're lucky, the relative size of an inch will mean the same thing in the horizontal and vertical direction, and this will give you a perfect circle, though of an uncertain size. But there is no guarantee even of this. See, for example,
+
+https://cran.r-project.org/bin/windows/base/old/2.0.1/rw-FAQ.html#Circles-appear-as-ovals-on-screen
+
+You may wish to specify the size of your circle in pixels instead. This may or may not be a more stable measure. To do this, you need a measure of pixels per inch.
+
+```{r calculate-pixels-per-inch}
+plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
+draw <- function() {
+  # Range in user coordinates
+  x.range <- par("usr")[2] - par("usr")[1]
+  y.range <- par("usr")[4] - par("usr")[3]
+  
+  pixels.per.inch <- dev.size(units="px") / dev.size(units="in")
+  # You could also calculate pixels.per.inch as par("cra") / par("cin")
+  
+  print(paste("The number of pixels per inch is", pixels.per.inch))
+  
+  # Number of pixels in plotting region
+  x.pixels <- par("pin")[1] * pixels.per.inch[1]
+  y.pixels <- par("pin")[2] * pixels.per.inch[1]
+  
+  print(paste("The size of the plotting region is", x.pixels, y.pixels, "pixels"))
+  
+  # Number of pixels per user coordinate
+  x.usr.per.px <- x.range / x.pixels
+  y.usr.per.px <- y.range / y.pixels
+  
+  print(paste("Each pixel is equivalent to", x.usr.per.px, y.usr.per.px, "user coordinates"))
+  
+  r <- 50
+  x.circle <- x0 + r * x.usr.per.px * cos(pi.seq)
+  y.circle <- y0 + r * y.usr.per.px * sin(pi.seq)
+  lines(x.circle, y.circle, col="red")
+}
+title("A circle with a fifty pixel radius")
+```
+
+The results on my computer system may not match the results on your computer system.
+
+If you open a graphics window with the windows() function, you have the option of tweaking this ratio with the xpinch and ypinch arguments. These arguments are not available in most other functions that open a graphics device. These will typically pull a value from your operating system.
+
+A simple modification of this code will allow you to draw a perfect square, diamond, or equilateral triange. Note the fudge factors used in r to insure the correct lengths of the sides.
+
+```{r half-inch-square}
+plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
+
+draw <- function(x0, y0) {
+  # Range in user coordinates
+  x.range <- par("usr")[2] - par("usr")[1]
+  y.range <- par("usr")[4] - par("usr")[3]
+  
+  # Number of inches in plotting region
+  x.inches <- par("pin")[1]
+  y.inches <- par("pin")[2]
+  
+  # Number of inches per user coordinate
+  x.usr.per.in <- x.range / x.inches
+  y.usr.per.in <- y.range / y.inches
+  
+  r <- 0.5 * sqrt(2)
+  
+  pi.seq <- c(1, 3, 5, 7, 9) * pi / 4
+  x.square <- x0 + r * x.usr.per.in * cos(pi.seq)
+  y.square <- y0 + r * y.usr.per.in * sin(pi.seq)
+  lines(x.square, y.square, col="red")
+}
+title("A half inch square")
+
+```
