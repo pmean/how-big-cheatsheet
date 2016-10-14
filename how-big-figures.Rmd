@@ -485,19 +485,17 @@ cin2()
 cin1()
 ```
 
-**par("cin")** *(r.o.)*
+**par("cin")** *(r.o.)* (width, height) in inches
 
-**par("csi")** *(r.o.)*
+**par("csi")** *(r.o.)* height in inches
 
-**par("cra")** *(r.o.)*
+**par("cra")** *(r.o.)* (width, height) in pixels
 
-**par("cxy")** *(r.o.)*
+**par("cxy")** *(r.o.)* (width, height) in user coordinates
 
 You can query the approximate size of individual characters using various **par** arguments. Three of these arguments, cin, cra, and cxy, give the size of the width and height as a vector of length 2. The csi argument gives the height only.
 
-The height is the height of a line and the width is the same
-
-
+The height is the height of a line and the width is the same no matter which letter you choose.
 
 # All the graphs combined
 

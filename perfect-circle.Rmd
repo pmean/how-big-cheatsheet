@@ -1,0 +1,68 @@
+---
+title: "Perfect circle"
+author: "Steve Simon"
+date: "October 13, 2016"
+output: html_document
+---
+
+When you try to draw a circle on a graph, it often ends up looking like an ellipse. Here's an example.Drawing a circle on a graph do
+
+```{r ellipse}
+par(mar=c(4.6, 4.6, 0.6, 0.6))
+plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
+pi.seq <- seq(0, 2*pi, length=100)
+x0 <- 10
+y0 <- 50
+r  <-  2
+x.circle <- x0 + r * cos(pi.seq)
+y.circle <- y0 + r * sin(pi.seq)
+lines(x.circle, y.circle, lty="dotted")
+dev.size()
+```
+
+There are three things that are contributing to this problem.
+
+1. The default graph in R Markdown is rectangular.
+
+2. The default margins are uneven with more margins on the top and bottom compared to the left and right sides.
+
+3. The number of units on this graph are different for the x-axis and the y-axis.
+
+To draw a circle properly, you need to measure
+
+1. the range of the x-axis and y-axis, and
+
+2. the size of the plotting region in inches
+
+3. (optionally) the number of pixels per inch.
+
+```{r half-inch-circle}
+plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
+
+# Range in user coordinates
+x.range <- par("usr")[2] - par("usr")[1]
+y.range <- par("usr")[4] - par("usr")[3]
+
+print(paste("The user range is", x.range, y.range))
+
+# Number of pixels in plotting region
+x.inches <- par("pin")[1]
+y.inches <- par("pin")[2]
+
+print(paste("The size of the plotting region is", x.inches, y.inches, "inches"))
+
+# Number of pixels per user coordinate
+x.usr.per.in <- x.range / x.inches
+y.usr.per.in <- y.range / y.inches
+
+print(paste("Each inch is equivalent to", x.usr.per.in, y.usr.per.in, "user coordinates"))
+
+r <- 0.5
+x.circle <- x0 + r * x.usr.per.in * cos(pi.seq)
+y.circle <- y0 + r * y.usr.per.in * sin(pi.seq)
+lines(x.circle, y.circle, col="red")
+title("A circle with a half inch radius")
+
+```
+
+The concept of inches in a graph is a loose one at best. The half inch radius shown above might appears slightly bigger or slightly smaller than a half inch and it will probably change when you move from one computer monitor to another. The size will probably change when you print this graph.
