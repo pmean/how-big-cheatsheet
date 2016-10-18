@@ -168,3 +168,32 @@ text(12.5, 40, "s=150 (px)")
 draw.triangle(17.5, 40, 1, convert_to_inches, border="red")
 text(17.5, 40, "s=1 (in)")
 ```
+
+Let's see how these functions can help with string rotation.
+
+```{r rotation_1}
+plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
+lines(x=c(5, 15, 15, 5), y=c(20, 20, 80, 20))
+text(10, 20-1.5*strheight("a", units="user"), "a")
+text(15+1.5*strwidth("b"), 50, "b")
+ctext <- expression(sqrt(a^2+b^2))
+text(10, 50+1.5*strheight(ctext), ctext)
+```
+
+That looks nice, but wouldn't it be better if you could tilt the formula on the hypotenuse? You can do this with the srt argument, but you need to rotate in the dimensions of the graph in inches or pixels.
+
+```{r rotation_2}
+plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
+lines(x=c(5, 15, 15, 5), y=c(20, 20, 80, 20))
+text(10, 20-1.5*strheight("a", units="user"), "a")
+text(15+1.5*strwidth("b"), 50, "b")
+delta.x <- 15-5
+delta.y <- 80-20
+adj <- convert_to_inches()
+print(adj)
+hyp.angle <- atan2(delta.y/adj$y, delta.x/adj$x) * 180 / pi
+print(hyp.angle)
+ctext <- expression(sqrt(a^2+b^2))
+text(10, 50+1.5*strheight(ctext), ctext, srt=hyp.angle)
+```
+
