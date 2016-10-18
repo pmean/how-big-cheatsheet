@@ -15,32 +15,25 @@ draw.circle <- function(x0, y0, r, ...) {
   y.circle <- y0 + r * sin(pi.seq)
   polygon(x.circle, y.circle, ...)
 }
-par(mar=c(4.6, 4.6, 0.6, 0.6))
 plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
 draw.circle(5, 80, 5, lty="dotted")
 text(5, 80, "r=5 (usr)")
-dev.size()
+dv <- dev.size()
+ma <- par("mai")
+us <- par("usr")
 ```
 
 There are three things that are contributing to this problem.
 
-1. The default graph in R Markdown is rectangular.
+1. The default graph in R Markdown is rectangular. You can measure the size of a graph in inches with the dev.size() function: `r dv`
 
-2. The default margins are uneven with more margins on the top and bottom compared to the left and right sides.
+2. The default margins are uneven with more margins on the top and bottom compared to the left and right sides. You can measure the size of the margins in inches with par("mai"): `r ma`. The size of the bottom margin is listed first, followed by the left, top, and right margins.
 
-3. The number of units on this graph are different for the x-axis and the y-axis.
+3. The number of units on this graph are different for the x-axis and the y-axis. You can measure the minimum and maximum values on the x and y axes using par("usr"): `r us`. Note that, by default, R adds an extra 4% to each end of the axis to reduce problems with clipping.
 
 It's not necessarily bad to see an ellipse where you were expecting a circle. But if you do want a perfect circle, you need to calculate the size of the plotting region and adjust appropriately.
 
-To draw a perfect circle, you need to measure
-
-1. the range of the x-axis and y-axis, and
-
-2. the size of the plotting region in inches
-
-3. (optionally) the number of pixels per inch.
-
-```{r half-inch-circle}
+```{r calculate-inches}
 draw.circle <- function(x0, y0, r, adjust.units=function() {list(x=1, y=1)}, ...) {
   # draw a circle of radius r centered at x0, y0
   # with an adjustment in the horizontal and vertical dimensions
@@ -86,7 +79,7 @@ https://cran.r-project.org/bin/windows/base/old/2.0.1/rw-FAQ.html#Circles-appear
 
 You may wish to specify the size of your circle in pixels instead. This may or may not be a more stable measure. To do this, you need a measure of pixels per inch.
 
-```{r calculate-pixels-per-inch}
+```{r calculate-pixels}
 convert_to_pixels <- function() {
   # This funciton adjusts from user coordinates to pixels.
   # There is a short-cut: ratio <- par("cxy") / par("cra")
