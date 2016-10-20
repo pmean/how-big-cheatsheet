@@ -180,7 +180,7 @@ ctext <- expression(sqrt(a^2+b^2))
 text(10, 50+1.5*strheight(ctext), ctext)
 ```
 
-That looks nice, but wouldn't it be better if you could tilt the formula on the hypotenuse? You can do this with the srt argument, but you need to rotate in the dimensions of the graph in inches or pixels.
+That looks nice, but wouldn't it be better if you could tilt the formula on the hypotenuse? You can do this with the srt argument, but you need to rotate in the dimensions of the graph (in inches or pixels).
 
 ```{r rotation_2}
 plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
