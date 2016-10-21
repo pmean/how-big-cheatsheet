@@ -127,9 +127,9 @@ mar <- function() {
   tbox    (x(307), y(467), "mai[3] (in), nmar[3] (lines)", adj=0, cex=1.0)
   
   # left margin
-  arrows  (x(200), y(392), x(300), y(392), lwd=2, len=0.05, code=3)
-  segments(x(250), y(392), x(250), y(382), lwd=2)
-  tbox    (x(250), y(382), "mai[2] (in), mar[2] (lines)", adj=1, srt=90)
+  arrows  (x(200), y(325), x(300), y(325), lwd=2, len=0.05, code=3)
+  segments(x(250), y(325), x(250), y(330), lwd=2)
+  tbox    (x(250), y(330), "mai[2] (in), mar[2] (lines)", adj=0, srt=90)
   
   # right margin
   arrows  (x(400), y(325), x(500), y(325), lwd=2, length=0.05, code=3)
@@ -159,46 +159,29 @@ If your graph has no axes or titles, you can remove the margins (and maximize th
 ```{r step4_region, fig.width=5.25, fig.height=5.25, echo=FALSE}
 pin <- function() {
   # plotting region size (x--pin[1], plt[1], plt[2])
-  s3 <- "pin[1] (in)"
-  w3 <- strwidth(s3)
-  text  (x(312),    y(330), s3, adj=0)
-  arrows(x(308),    y(330), x(300), y(330), lwd=2, len=0.05)
-  arrows(x(316)+w3, y(330), x(400), y(330), lwd=2, len=0.05)
+  arrows(x(300),    y(330), x(400), y(330), lwd=2, len=0.05, code=3)
+  tbox  (x(312),    y(330), "pin[1] (in)", adj=0, co="olivedrab1")
+
+  arrows  (x(200), y(320), x(300), y(320), lwd=2, len=0.05)
+  segments(x(300), y(320), x(500), y(320), lwd=2, lty="dotted")
+  tbox    (x(312), y(320), "plt[1] (pct)", adj=0, co="olivedrab1")
+
+  arrows  (x(200), y(310), x(400), y(310), lwd=2, len=0.05)
+  segments(x(400), y(310), x(500), y(310), lwd=2, lty="dotted")
+  tbox    (x(312), y(310), "plt[2] (pct)", adj=0, co="olivedrab1")
   
-  s4 <- "plt[1] (pct)"
-  w4 <- strwidth(s4)
-  text    (x(312), y(310), s4, adj=0)
-  arrows  (x(200), y(310), x(300),    y(310), lwd=2, len=0.05)
-  segments(x(300), y(310), x(308),    y(310), lwd=2, lty="dotted")
-  segments(x(500), y(310), x(316)+w4, y(310), lwd=2, lty="dotted")
+
+  # plotting region size (y--pin[2], plt[3], plt[4])
+  arrows  (x(370), y(300), x(370), y(400), lwd=2, len=0.05, code=3)
+  tbox    (x(370), y(375), "pin[2] (in)", adj=1, srt=90, co="olivedrab1")
+
+  arrows  (x(390), y(200), x(390), y(400), lwd=2, len=0.05)
+  segments(x(390), y(400), x(390), y(500), lwd=2, lty="dotted")
+  tbox    (x(390), y(375), "plt[4] (pct)", adj=1, srt=90, co="olivedrab1")
   
-  s5 <- "plt[2] (pct)"
-  w5 <- strwidth(s5)
-  text    (x(312),    y(320), s5, adj=0)
-  segments(x(200),    y(320), x(308), y(320), lwd=2)
-  arrows  (x(316)+w5, y(320), x(400), y(320), lwd=2, len=0.05)
-  segments(x(400),    y(320), x(500), y(320), lwd=2, lty="dotted")
-  
-  s6 <- "pin[2] (in)"
-  w6 <- strwidth(s6)
-  arrows(x(390), y(371)-w6, x(390), y(300), lwd=2, len=0.05)
-  arrows(x(390), y(379),    x(390), y(400), lwd=2, len=0.05)
-  text  (x(390), y(375), s6, adj=1, srt=90)
-  
-  # plotting region size (x--pin[1], plt[1], plt[2])
-  s7 <- "plt[4] (pct)"
-  w7 <- strwidth(s7)
-  text    (x(380), y(375), s7, adj=1, srt=90)
-  segments(x(380), y(200), x(380), y(371)-w7, lwd=2)
-  arrows  (x(380), y(379), x(380), y(400),    lwd=2, len=0.05)
-  segments(x(380), y(400), x(380), y(500),    lwd=2, lty="dotted")
-  
-  s8 <- "plt[3] (pct)"
-  w8 <- strwidth(s8)
-  text    (x(370), y(375), s8, adj=1, srt=90)
-  segments(x(370), y(200), x(370), y(371)-w7, lwd=2, lty="dotted")
-  arrows  (x(370), y(200), x(370), y(300),    lwd=2, len=0.05)
-  segments(x(370), y(379), x(370), y(500),    lwd=2, lty="dotted")
+  arrows  (x(380), y(200), x(380), y(300), lwd=2, len=0.05)
+  segments(x(380), y(300), x(380), y(500), lwd=2, lty="dotted")
+  tbox    (x(380), y(375), "plt[3] (pct)", adj=1, srt=90, co="olivedrab1")
 }
 draw_framework()
 pin()
@@ -222,13 +205,13 @@ The **plt** argument gives you the percentage of the device up to the left edge 
 usr <- function() {
   # lower left user coordinates
   arrows  (x(267), y(267), x(300), y(300), lwd=2, len=0.05)
-  segments(x(267), y(267), x(314), y(267), lwd=2)
-  text    (x(318), y(267), "usr[c(1,3)] (user)", adj=0)
+  segments(x(267), y(267), x(318), y(267), lwd=2)
+  tbox    (x(318), y(267), "usr[c(1,3)] (user)", adj=0)
   
   # upper right user coordinates
   arrows  (x(433), y(433), x(400), y(400), lwd=2, len=0.05)
-  segments(x(433), y(433), x(360), y(433), lwd=2)
-  text    (x(356), y(433), "usr[c(2,4)] (user)", adj=1)
+  segments(x(433), y(433), x(356), y(433), lwd=2)
+  tbox    (x(356), y(433), "usr[c(2,4)] (user)", adj=1)
 }
 draw_framework()
 usr()
