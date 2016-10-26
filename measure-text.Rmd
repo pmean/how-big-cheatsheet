@@ -1,0 +1,180 @@
+---
+title: "Measure-text"
+author: "Steve Simon"
+date: "October 26, 2016"
+output: html_document
+---
+
+
+```{r step9_strheight, fig.width=3.33, fig.height=3.33, echo=FALSE}
+draw_framework <- function() {
+  par(mar=rep(0.6, 4), xaxs="i", yaxs="i")
+  plot(c(100, 200), c(100, 200), type="n", axes=FALSE)
+  axis(side=1, at=c(104, 196), labels=rep(" ", 2))
+  polygon(x=c(100, 100, 200, 200), y=c(100, 200, 200, 100), border=NA, col="olivedrab1")
+  polygon(x=c(104, 104, 196, 196), y=c(104, 196, 196, 104), border="black", lty="dotted", col="olivedrab")
+  axis(side=1, at=c(104, 196), labels=rep(" ", 2), lwd=2)
+  axis(side=2, at=c(104, 196), labels=rep(" ", 2), lwd=2)
+}
+draw_multiline <- function() {
+  text(125, 178, "Abcde\nFghij\nKlmno", cex=1.33)
+  u0 <<- 0.67*strheight("M")
+  u1 <<- 0.67*(strheight("M\nM") - strheight("M"))
+  u  <<- 178 + c(2, 2, 0, 0, -2, -2)*u1 + c(1, -1, 1, -1, 1, -1)*u0
+  u12 <<- (u[1]+u[2])/2
+  u34 <<- (u[3]+u[4])/2
+  u56 <<- (u[5]+u[6])/2
+  u7  <<- u[6]-u1
+  segments(104, u, 196, u, lty="dotted")
+}
+draw_height <- function() {
+  par(cex=0.75)
+  text(190, u12, 'strheight("M")', adj=1)
+  text(190, u34, 'strheight("M\\nM")', adj=1)
+  text(190, u56, 'strheight("M\\nM\\nM")', adj=1)
+  arrows  (155, u[1], 155, u[2], lwd=2, len=0.05, code=3)
+  arrows  (150, u[1], 150, u[4], lwd=2, len=0.05, code=3)
+  arrows  (145, u[1], 145, u[6], lwd=2, len=0.05, code=3)
+  segments(155,  u12, 162,  u12, lwd=2)
+  segments(150,  u34, 154,  u34, lwd=2)
+  segments(145,  u56, 147,  u56, lwd=2)
+}
+draw_framework()
+draw_multiline()
+draw_height()
+```
+
+## String size
+
+**strheight()**
+
+The text that appears inside your plot (e.g, with the **text()** function) or that appears outside your plot (e.g., your title and axis labels) can vary substantially from one plot to another.
+
+The **strwidth** and **strheight** functions will tell you the size of a specified string in inches (**units="inches"**), user coordinates (**units="user"**) or as a percentage of the graphics device (**units="figure"**).
+
+For a single line of text, **strheight** will give you the height of the letter "M". Watch out as the vertical size of a string will not count the part that letters that descend below the baseline (e.g., "g" or "j").
+
+If you have a string with one of more linebreaks ("\n"), the **strheight** function will measure the height of the letter "M" plus the height of one or more additional lines. The height of a line is dependent on the line spacing, set by the **lheight** argument of **par**. The default line height (**lheight=1**), corresponding to single spaced lines, produces a line height equal to 1.6 times the height of "M".
+
+```{r step9_strwidth, fig.width=3.33, fig.height=3.33, echo=FALSE}
+draw_width <- function() {
+  par(cex=1.33)
+  text(120, 150, "W")
+  text(140, 150, "L")
+  text(160, 150, "v")
+  text(180, 150, "i")
+
+  par(cex=0.75)
+  text(120, 140, 'strwidth("W")')
+  text(140, 135, 'strwidth("L")')
+  text(160, 140, 'strwidth("v")')
+  text(180, 135, 'strwidth("i")')
+  
+  
+  u <- 0.67*strwidth("W")
+  v <- 0.67*strheight("W")
+  segments(120-u, 150+1.5*v, 120-u,  150-2.0*v, lty="dotted")
+  segments(120+u, 150+1.5*v, 120+u,  150-2.0*v, lty="dotted")
+  arrows  (120+u, 150-2.0*v, 120-u,  150-2.0*v, len=0.05, lwd=2, code=3)
+  segments(120,   150-2.0*v, 120,    140+0.5*v, lwd=2)
+  
+  u <- 0.67*strwidth("L")
+  v <- 0.67*strheight("L")
+  segments(140-u, 150+1.5*v, 140-u,  150-2.0*v, lty="dotted")
+  segments(140+u, 150+1.5*v, 140+u,  150-2.0*v, lty="dotted")
+  arrows  (140+u, 150-2.0*v, 140-u,  150-2.0*v, len=0.05, lwd=2, code=3)
+  segments(140,   150-2.0*v, 140,    135+0.5*v, lwd=2)
+
+  u <- 0.67*strwidth("v")
+  v <- 0.67*strheight("v")
+  segments(160-u, 150+1.5*v, 160-u,  150-2.0*v, lty="dotted")
+  segments(160+u, 150+1.5*v, 160+u,  150-2.0*v, lty="dotted")
+  arrows  (160+u, 150-2.0*v, 160-u,  150-2.0*v, len=0.05, lwd=2, code=3)
+  segments(160,   150-2.0*v, 160,    140+0.5*v, lwd=2)
+
+  u <- 0.67*strwidth("i")
+  v <- 0.67*strheight("i")
+  segments(180-u, 150+1.5*v, 180-u,  150-2.0*v, lty="dotted")
+  segments(180+u, 150+1.5*v, 180+u,  150-2.0*v, lty="dotted")
+  arrows  (180+u, 150-2.0*v, 180-u,  150-2.0*v, len=0.05, lwd=2, code=3)
+  segments(180,   150-2.0*v, 180,    135+0.5*v, lwd=2)
+}
+
+draw_framework()
+draw_width()
+```
+
+## String size
+
+**strwidth()**
+
+The **strwidth** function will produce different widths to individual characters, representing the proportional spacing used by most fonts (a "W" using much more space than an "i"). For the width of a string, the **strwidth** function will sum up the lengths of the individual characters in the string.
+
+
+```{r step8_cin2, fig.width=3.33, fig.height=3.33, echo=FALSE}
+cin2 <- function() {
+  par(cex=0.75)
+  text(190, u7,  "cin[2] or csi (in), cra[2] (px), cxy[2] (user)", adj=1)
+  arrows  (110, u[2], 110, u[4], lwd=2, len=0.05, code=3)
+  # segments(x(345),  u56, x(347),  u56, lwd=2)
+  segments(110,  u34, 106,  u34, lwd=2)
+  segments(106,  u34, 106,  u7,  lwd=2)
+  segments(106,  u7,  108,  u7,  lwd=2)
+}
+draw_framework()
+draw_multiline()
+cin2()
+```
+
+```{r step8_cin1, fig.width=3.33, fig.height=3.33, echo=FALSE}
+cin1 <- function() {
+  u <- 0.67*par("cxy")[1]
+  v <- 0.67*strheight("W")
+
+  par(cex=1.33)  
+  text(120, 125, "W")
+  text(140, 125, "L")
+  text(160, 125, "v")
+  text(180, 125, "i")
+  
+  par(cex=0.75)
+  st <- "cin[1] (in), cra[1] (px), cxy[1] (user)"
+  text(190, 125-6.0*v, st, adj=1)
+
+  w <- c(120, 140, 160, 180)
+  z <- rep(125, 4)
+  segments(w-u, z+1.5*v, w-u,  z-2.0*v, lty="dotted")
+  segments(w+u, z+1.5*v, w+u,  z-2.0*v, lty="dotted")
+  arrows  (w+u, z-2.0*v, w-u,  z-2.0*v, len=0.05, lwd=2, code=3)
+  segments(w,   z-2.0*v, w,    z-3.0*v, lwd=2)
+  segments(180, z-3.0*v, 110,  z-3.0*v, lwd=2)
+  segments(110, z-3.0*v, 110,  z-6.0*v, lwd=2)
+  segments(110, z-6.0*v, 125,  z-6.0*v, lwd=2)
+}
+draw_framework()
+cin1()
+```
+
+Draw everything
+
+```{r everything, fig.width=3.33, fig.height=3.33, echo=FALSE}
+draw_framework()
+draw_multiline()
+draw_height()
+draw_width()
+cin2()
+cin1()
+```
+
+**par("cin")** *(r.o.)* (width, height) in inches
+
+**par("csi")** *(r.o.)* height in inches
+
+**par("cra")** *(r.o.)* (width, height) in pixels
+
+**par("cxy")** *(r.o.)* (width, height) in user coordinates
+
+You can query the approximate size of individual characters using various **par** arguments. Three of these arguments, cin, cra, and cxy, give the size of the width and height as a vector of length 2. The csi argument gives the height only.
+
+The height is the height of a line and the width is the same no matter which letter you choose.
+
