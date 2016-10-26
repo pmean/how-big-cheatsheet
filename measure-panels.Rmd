@@ -50,10 +50,12 @@ The following code is part of an R Cheat Sheet, How Big Is Your Graph.
 
   polygon(x=c(110, 890, 890, 110), y=c(110, 110, 890, 890), lwd=2, lty="dashed")
 
-  arrows(500, 230, 800, 230, lwd=2, length=0.05, code=3)
-  arrows(530, 200, 530, 500, lwd=2, length=0.05, code=3)
-  text(650, 230, "fig[1] (pct), fin[1] (in)")
-  text(530, 350, "fig[1] (pct), fin[1] (in)", srt=90)
+  arrows(560, 240, 500, 240, lwd=2, length=0.05)
+  arrows(740, 240, 800, 240, lwd=2, length=0.05)
+  arrows(540, 260, 540, 200, lwd=2, length=0.05)
+  arrows(540, 440, 540, 500, lwd=2, length=0.05)
+  text(650, 230, "fig[1] (pct)\nfin[1] (in)")
+  text(530, 350, "fig[2] (pct)\nfin[2] (in)", srt=90)
   
   arrows(230, 110, 230, 200, lwd=2, length=0.05, code=3)
   arrows(230, 800, 230, 890, lwd=2, length=0.05, code=3)
@@ -68,8 +70,6 @@ The following code is part of an R Cheat Sheet, How Big Is Your Graph.
   text(155, 300, "oma[2] (lines), omd[2] (pct), omi[2] (in)", adj=0, srt=90)
   text(845, 300, "oma[4] (lines), omd[4] (pct), omi[4] (in)", adj=0, srt=90)
 ```
-
-# Step 8b
 
 ## Panels
 
