@@ -1,0 +1,121 @@
+---
+title: "measure-panels"
+author: "Steve Simon"
+date: "September 17, 2016"
+output: html_document
+---
+
+The following code is part of an R Cheat Sheet, How Big Is Your Graph.
+
+```{r step8_panel, fig.width=2.67, fig.height=2.67, echo=FALSE}
+
+draw_panel <- function() {
+  par(mar=rep(0, 4), xaxs="i", yaxs="i", cex=0.75, tcl=-0.2)
+  plot(c(-0.1,7.1), c(-0.1,7.1), type="n", axes=FALSE)
+
+  segments(x(300), y(300), x(300), y(400), lty="dotted")
+  segments(x(350), y(300), x(350), y(400), lty="dotted")
+  segments(x(400), y(300), x(400), y(400), lty="dotted")
+  
+  segments(x(300), y(300), x(400), y(300), lty="dotted")
+  segments(x(300), y(350), x(400), y(350), lty="dotted")
+  segments(x(300), y(400), x(400), y(400), lty="dotted")
+  
+  # user coordinates after adding 4%
+  polygon(
+    x=x(c(308, 342, 342, 308)),
+    y=y(c(308, 308, 342, 342)),
+    density=NA, col="olivedrab", border="black")
+
+  polygon(
+    x=x(c(358, 392, 392, 358)),
+    y=y(c(358, 358, 392, 392)),
+    density=NA, col="olivedrab", border="black")
+
+  # polygon(
+  #   x=x(c(358, 392, 392, 358)),
+  #   y=y(c(308, 308, 342, 342)),
+  #   density=NA, col="olivedrab", border="black")
+
+  polygon(
+    x=x(c(308, 342, 342, 308)),
+    y=y(c(358, 358, 392, 392)),
+    density=NA, col="olivedrab", border="black")
+
+  # user coordinates defined by xlim, ylim
+  polygon(
+    x=x(c(310, 340, 340, 310)),
+    y=y(c(310, 310, 340, 340)),
+    density=NA, col="olivedrab1", border="black", lty="dotted")
+
+  polygon(
+    x=x(c(360, 390, 390, 360)),
+    y=y(c(360, 360, 390, 390)),
+    density=NA, col="olivedrab1", border="black", lty="dotted")
+
+  # polygon(
+  #   x=x(c(360, 390, 390, 360)),
+  #   y=y(c(310, 310, 340, 340)),
+  #   density=NA, col="olivedrab1", border="black", lty="dotted")
+
+  polygon(
+    x=x(c(310, 340, 340, 310)),
+    y=y(c(360, 360, 390, 390)),
+    density=NA, col="olivedrab1", border="black", lty="dotted")
+
+  axis(side=1, pos=y(308), at=x(c(310, 340)), labels=rep(" ", 2), lwd=1) 
+  axis(side=1, pos=y(358), at=x(c(360, 390)), labels=rep(" ", 2), lwd=1) 
+  axis(side=1, pos=y(358), at=x(c(310, 340)), labels=rep(" ", 2), lwd=1) 
+  # axis(side=1, pos=y(308), at=x(c(360, 390)), labels=rep(" ", 2), lwd=1) 
+
+  axis(side=2, pos=x(308), at=y(c(310, 340)), labels=rep(" ", 2), lwd=1) 
+  axis(side=2, pos=x(358), at=y(c(360, 390)), labels=rep(" ", 2), lwd=1) 
+  # axis(side=2, pos=x(358), at=y(c(310, 340)), labels=rep(" ", 2), lwd=1) 
+  axis(side=2, pos=x(308), at=y(c(360, 390)), labels=rep(" ", 2), lwd=1) 
+  
+  polygon(x=x(c(200, 500, 500, 200)), y=y(c(200, 200, 500, 500)), lwd=2, lty="dashed")
+
+  # par("fin")
+  arrows(x(350), y(302), x(400), y(302), lwd=2, length=0.05, code=3)
+  arrows(x(354), y(300), x(354), y(350), lwd=2, length=0.05, code=3)
+ 
+  arrows(x(396), y(200), x(396), y(300), lwd=2, length=0.05, code=3)
+  segments(x(396), y(250), x(350), y(250), lwd=2)
+  
+  arrows(x(396), y(400), x(396), y(500), lwd=2, length=0.05, code=3)
+  segments(x(396), y(450), x(350), y(450), lwd=2)
+
+  arrows(x(200), y(396), x(300), y(396), lwd=2, length=0.05, code=3)
+  segments(x(250), y(396), x(250), y(350), lwd=2)
+  
+  arrows(x(400), y(396), x(500), y(396), lwd=2, length=0.05, code=3)
+  segments(x(450), y(396), x(450), y(350), lwd=2)
+
+  tbox(x(378), y(302), "fig[1] (pct), fin[1] (in)", cex=0.67)
+  tbox(x(354), y(325), "fig[2] (pct), fin[2] (in)", cex=0.67, srt=90)
+  tbox(x(350), y(250), "oma[1] (lines), omd[1] (pct), omi[1] (in)", cex=0.75)
+  tbox(x(350), y(450), "oma[3] (lines), omd[3] (pct), omi[3] (in)", cex=0.75)
+  tbox(x(250), y(340), "oma[2] (lines), omd[2] (pct), omi[2] (in)", cex=0.75, srt=90)
+  tbox(x(450), y(340), "oma[4] (lines), omd[4] (pct), omi[4] (in)", cex=0.75, srt=90)
+}
+draw_panel()
+```
+
+# Step 8b
+
+## Panels
+
+**par("fig")** (width, height) in pct
+
+**par("fin")** (width, height) in inches
+
+**par("oma")** (bottom, left, top, right) in lines
+
+**par("omd")** (bottom, left, top, right) in pct
+
+**par("omi")** (bottom, left, top, right) in inches
+
+If you display multiple plots within a single graphics window (e.g., with **par("mfrow")** or **par("mfcol")** or the **layout** function), then the **fig** and **fin** arguments to **par** will tell you the size of the current subplot window in percent or inches, respectively.
+
+Each subplot will have margins specified by **mai** or **mar**, but there are no outer margin around the entire set of plots, unless you specify them using **oma**, **omd**, or **omi**. You can place text in the outer margins using the **mtext** function with the argument **outer=TRUE**.
+

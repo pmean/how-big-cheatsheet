@@ -1,0 +1,221 @@
+---
+title: "Illustrating-margins-and-plotting-region"
+author: "Steve Simon"
+date: "September 17, 2016"
+output: html_document
+---
+
+```{r step0-prelims, fig.width=3.33, fig.height=3.33, echo=FALSE}
+# Note: once I am done with this, I need to do a cheat sheet on date-time values in R.
+
+x <- function(p) {
+  marks <- c(-1, 0, 0.82, 7-0.42, 7, 7)
+  p <- ifelse (p < 100, 100, p)
+  p <- ifelse (p > 500, 500, p)
+  i <- p %/% 100
+  w <- (p/100) %% 1
+  return((1-w)*marks[i]+w*marks[i+1])
+}
+
+y <- function(p) {
+  marks <- c(-1, 0, 1.02, 7-0.82, 7, 7)
+  p <- ifelse (p < 100, 100, p)
+  p <- ifelse (p > 500, 500, p)
+  i <- p %/% 100
+  w <- (p/100) %% 1
+  return((1-w)*marks[i]+w*marks[i+1])
+}
+
+# Start with the assumption that the graph is seven inches by seven inches
+# and that mar=c(5.1, 4.1, 4.1, 2.1) and mai=c(1.02, 0.82, 0.82, 0.42)
+# which means 5 lines per inch. Also assume that there are 96 pixels per inch.
+
+
+draw_framework <- function(pmin=-1, pmax=7.1) {
+  par(mar=rep(0, 4), xaxs="i", yaxs="i")
+  plot(c(pmin, pmax), c(pmin, pmax), type="n", axes=FALSE)
+
+  # user coordinates after adding 4%
+  polygon(
+    x=x(c(300, 400, 400, 300)),
+    y=y(c(300, 300, 400, 400)),
+    density=NA, col="olivedrab", border="black")
+
+  # user coordinates defined by xlim, ylim
+  polygon(
+    x=x(c(304, 396, 396, 304)),
+    y=y(c(304, 304, 396, 396)),
+    density=NA, col="olivedrab1", border="black", lty="dotted")
+
+  axis(side=1, pos=y(300), at=x(c(304, 396)), labels=rep(" ", 2), lwd=2) 
+  axis(side=2, pos=x(300), at=y(c(304, 396)), labels=rep(" ", 2), lwd=2) 
+
+  polygon(x=x(c(200, 500, 500, 200)), y=y(c(200, 200, 500, 500)), lwd=2, lty="dashed")
+}
+
+tbox <- function(x0, y0, s, co="white", cex=1, srt=0, adj=0.5) {
+  tx <- cex * (1.05*c(-1, 1, 1, -1)-2*adj+1) * strwidth(s) / 2
+  ty <- cex *       c(-1, -1, 1, 1)          * strheight(s) / 2
+  if (srt==90) {tmp <- tx; tx <- ty; ty <- tmp}
+  polygon(x=x0+tx, y=y0+ty, border=NA, col=co)
+  text(x0, y0, s, cex=cex, srt=srt, adj=adj)
+}
+```
+
+The following code is part of an R Cheat Sheet, How Big Is Your Graph.
+
+All functions that open a device for graphics will have **height** and **width** arguments to control the size of the graph and a **pointsize** argument to control the relative font size. In knitr, you control the size of the graph with the chunk options, **fig.width** and **fig.height**. This sheet will help you with calculating the size of the graph and various parts of the graph within R.
+
+```{r step2_device_size, fig.width=4.33, fig.height=4.33, echo=FALSE}
+din <- function() {
+  # graphics device size (x)
+  s1 <- "dev.size()[1] (in, cm, px), din[1] (in)"
+  arrows  (x(200),    y(150), x(500), y(150), lwd=2, len=0.05, code=3)
+  segments(x(200),    y(190), x(200), y(110), lwd=2)
+  segments(x(500),    y(190), x(500), y(110), lwd=2)
+  tbox    (x(304),    y(150), s1, adj=0)
+  
+  # graphics device size (y)
+  s2 <- "dev.size()[2] (in, cm, px), din[2] (in)"
+  arrows  (x(150), y(200),    x(150), y(500), lwd=2, len=0.05, code=3)
+  segments(x(190), y(200),    x(110), y(200), lwd=2)
+  segments(x(190), y(500),    x(110), y(500), lwd=2)
+  tbox    (x(150), y(304), s2, adj=0, srt=90)
+}
+draw_framework()
+din()
+```
+
+## Your graphics windows
+
+**dev.size(units)** (width, height) 
+
+**par("din")** *(r.o.)* (width, height) in inches
+
+Both the **dev.size** function or **par("din")** will tell you the size of the graphics device, but **par("din")** will not be updated if you resize your graphics window. The **dev.size** function will report the size in
+
+1. inches (**unit="in"**), the default
+
+2. centimeters (**units="cm"**)
+
+3. pixels (**units="px"**)
+
+Like several other **par** arguments, **din** is read only (r.o.) meaning that you cannot assign a value to it.
+
+```{r step3_margins, fig.width=4.33, fig.height=4.33, echo=FALSE}
+mar <- function() {
+  # bottom margin
+  arrows  (x(360), y(200), x(360), y(300), lwd=2, length=0.05, code=3)
+  segments(x(360), y(233), x(350), y(233), lwd=2)
+  tbox(    x(350), y(233), "mai[1] (in), mar[1] (lines)", adj=1, cex=1.0)
+  
+  # top margin
+  arrows  (x(302), y(400), x(302), y(500), lwd=2, length=0.05, code=3)
+  segments(x(302), y(467), x(307), y(467), lwd=2)
+  tbox    (x(307), y(467), "mai[3] (in), nmar[3] (lines)", adj=0, cex=1.0)
+  
+  # left margin
+  arrows  (x(200), y(325), x(300), y(325), lwd=2, len=0.05, code=3)
+  segments(x(250), y(325), x(250), y(330), lwd=2)
+  tbox    (x(250), y(330), "mai[2] (in), mar[2] (lines)", adj=0, srt=90)
+  
+  # right margin
+  arrows  (x(400), y(325), x(500), y(325), lwd=2, length=0.05, code=3)
+  segments(x(450), y(325), x(450), y(330), lwd=2)
+  tbox    (x(450), y(330), "mai[4] (in), mar[4] (lines)", adj=0, srt=90, cex=1.0)
+}
+draw_framework()
+mar()
+```
+
+## Your plot margins
+
+**par("mai")** -> (bottom, left, top, right) in inches
+
+**par("mar")** -> (bottom, left, top, right) in lines
+
+Margins provide you space for your axes, axis, labels, and titles.
+
+If your graph has no axes or titles, you can remove the margins (and maximize the plotting region) with
+
+**par(mar=rep(0,4))**
+
+```{r step4_region, fig.width=5.25, fig.height=5.25, echo=FALSE}
+pin <- function() {
+  # plotting region size (x--pin[1], plt[1], plt[2])
+  arrows(x(300),    y(330), x(400), y(330), lwd=2, len=0.05, code=3)
+  tbox  (x(312),    y(330), "pin[1] (in)", adj=0, co="olivedrab1")
+
+  arrows  (x(200), y(320), x(300), y(320), lwd=2, len=0.05)
+  segments(x(300), y(320), x(500), y(320), lwd=2, lty="dotted")
+  tbox    (x(312), y(320), "plt[1] (pct)", adj=0, co="olivedrab1")
+
+  arrows  (x(200), y(310), x(400), y(310), lwd=2, len=0.05)
+  segments(x(400), y(310), x(500), y(310), lwd=2, lty="dotted")
+  tbox    (x(312), y(310), "plt[2] (pct)", adj=0, co="olivedrab1")
+  
+
+  # plotting region size (y--pin[2], plt[3], plt[4])
+  arrows  (x(370), y(300), x(370), y(400), lwd=2, len=0.05, code=3)
+  tbox    (x(370), y(375), "pin[2] (in)", adj=1, srt=90, co="olivedrab1")
+
+  arrows  (x(390), y(200), x(390), y(400), lwd=2, len=0.05)
+  segments(x(390), y(400), x(390), y(500), lwd=2, lty="dotted")
+  tbox    (x(390), y(375), "plt[4] (pct)", adj=1, srt=90, co="olivedrab1")
+  
+  arrows  (x(380), y(200), x(380), y(300), lwd=2, len=0.05)
+  segments(x(380), y(300), x(380), y(500), lwd=2, lty="dotted")
+  tbox    (x(380), y(375), "plt[3] (pct)", adj=1, srt=90, co="olivedrab1")
+}
+draw_framework()
+pin()
+```
+
+## Your plotting region
+
+**par("pin")** -> (width, height) in inches
+
+**par("plt")** -> (left, right, bottom, top) in percent
+
+The **pin** argument in **par** gives you the size of the plotting region (the size of the device minus the size of the margins) in inches.
+
+The **plt** argument gives you the percentage of the device up to the left edge of the plotting region, the right edge, the bottom edge, and the top edge. The first and third values are equivalent to the percentage of space deveoted to the left and bottom margins. Subtract the second and fourth values from 1 to get the percentage of space devoted to the right and top margins.
+
+# Step 5a
+
+```{r step5_usr, fig.width=4.33, fig.height=4.33, echo=FALSE}
+usr <- function() {
+  # lower left user coordinates
+  arrows  (x(267), y(267), x(300), y(300), lwd=2, len=0.05)
+  segments(x(267), y(267), x(318), y(267), lwd=2)
+  tbox    (x(318), y(267), "usr[c(1,3)] (user)", adj=0)
+  
+  # upper right user coordinates
+  arrows  (x(433), y(433), x(400), y(400), lwd=2, len=0.05)
+  segments(x(433), y(433), x(356), y(433), lwd=2)
+  tbox    (x(356), y(433), "usr[c(2,4)] (user)", adj=1)
+}
+draw_framework()
+usr()
+```
+
+## Your x-y coordinates
+
+**par("usr")** -> (xmin, ymin, xmax, ymax)
+
+Your x-y coordinates are the values you use when plotting your data. Run **par("usr")** to get a vector of length 4 with the user coordinates with the minimum X value, the maximum X value, the minimum Y value, and the maximum Y value. This normally is not the same as the values specified by the xlim and ylim arguments in plot. By default, R adds and extra 4% to the plotting range so that points right on the edge do not get partially clipped. You can override this using the **xaxs="i"** and/or the **yaxs="i"** arguments in par.
+
+## Getting a square graph
+
+You can produce a square graph manually by setting the width and height to the same value and setting the margins so that the sum of the top and bottom margins equal the sum of the left and right margins. But a much easier way is to specify **pty="s"**, which adjusts the margins so that the size of the plotting region is always square, even if you resize the graphics window.
+
+## A single graph with all dimensions illustrated at once
+
+```{r combined_1, fig.width=4.33, fig.height=4.33, echo=FALSE}
+draw_framework()
+din()
+usr()
+mar()
+pin()
+cat("\n")
+```
