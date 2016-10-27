@@ -5,16 +5,19 @@ date: "October 26, 2016"
 output: html_document
 ---
 
+## String size
 
-```{r step9_strheight, fig.width=3.33, fig.height=3.33, echo=FALSE}
-draw_framework <- function() {
+The text that appears inside your plot (e.g, with the **text()** function) or that appears outside your plot (e.g., your title and axis labels) can vary substantially from one plot to another.
+
+```{r step9_strheight, fig.width=3.33, fig.height=1.67, echo=FALSE}
+draw_framework <- function(y0=104, y1=196) {
   par(mar=rep(0.6, 4), xaxs="i", yaxs="i")
-  plot(c(100, 200), c(100, 200), type="n", axes=FALSE)
+  plot(c(100, 200), c(y0-4, y1+4), type="n", axes=FALSE)
   axis(side=1, at=c(104, 196), labels=rep(" ", 2))
-  polygon(x=c(100, 100, 200, 200), y=c(100, 200, 200, 100), border=NA, col="olivedrab1")
-  polygon(x=c(104, 104, 196, 196), y=c(104, 196, 196, 104), border="black", lty="dotted", col="olivedrab")
+  polygon(x=c(100, 100, 200, 200), y=c(y0-4, y1+4, y1+4, y0-4), col="olivedrab1", border=NA)
+  polygon(x=c(104, 104, 196, 196), y=c(y0,   y1,   y1,   y0),   col="olivedrab",  border="black", lty="dotted")
   axis(side=1, at=c(104, 196), labels=rep(" ", 2), lwd=2)
-  axis(side=2, at=c(104, 196), labels=rep(" ", 2), lwd=2)
+  axis(side=2, at=c(y0, y1), labels=rep(" ", 2), lwd=2)
 }
 draw_multiline <- function() {
   text(125, 178, "Abcde\nFghij\nKlmno", cex=1.33)
@@ -39,24 +42,20 @@ draw_height <- function() {
   segments(150,  u34, 154,  u34, lwd=2)
   segments(145,  u56, 147,  u56, lwd=2)
 }
-draw_framework()
+draw_framework(y0=154, y1=196)
 draw_multiline()
 draw_height()
 ```
 
-## String size
-
 **strheight()**
 
-The text that appears inside your plot (e.g, with the **text()** function) or that appears outside your plot (e.g., your title and axis labels) can vary substantially from one plot to another.
-
-The **strwidth** and **strheight** functions will tell you the size of a specified string in inches (**units="inches"**), user coordinates (**units="user"**) or as a percentage of the graphics device (**units="figure"**).
+The **strheight** functions will tell you the height of a specified string in inches (**units="inches"**), x-y user coordinates (**units="user"**) or as a percentage of the graphics device (**units="figure"**).
 
 For a single line of text, **strheight** will give you the height of the letter "M". Watch out as the vertical size of a string will not count the part that letters that descend below the baseline (e.g., "g" or "j").
 
 If you have a string with one of more linebreaks ("\n"), the **strheight** function will measure the height of the letter "M" plus the height of one or more additional lines. The height of a line is dependent on the line spacing, set by the **lheight** argument of **par**. The default line height (**lheight=1**), corresponding to single spaced lines, produces a line height equal to 1.6 times the height of "M".
 
-```{r step9_strwidth, fig.width=3.33, fig.height=3.33, echo=FALSE}
+```{r step9_strwidth, fig.width=3.33, fig.height=1.33, echo=FALSE}
 draw_width <- function() {
   par(cex=1.33)
   text(120, 150, "W")
@@ -100,18 +99,15 @@ draw_width <- function() {
   segments(180,   150-2.0*v, 180,    135+0.5*v, lwd=2)
 }
 
-draw_framework()
+draw_framework(y0=124, y1=161)
 draw_width()
 ```
-
-## String size
 
 **strwidth()**
 
 The **strwidth** function will produce different widths to individual characters, representing the proportional spacing used by most fonts (a "W" using much more space than an "i"). For the width of a string, the **strwidth** function will sum up the lengths of the individual characters in the string.
 
-
-```{r step8_cin2, fig.width=3.33, fig.height=3.33, echo=FALSE}
+```{r step8_cin2, fig.width=3.33, fig.height=1.67, echo=FALSE}
 cin2 <- function() {
   par(cex=0.75)
   text(190, u7,  "cin[2] or csi (in), cra[2] (px), cxy[2] (user)", adj=1)
@@ -121,12 +117,22 @@ cin2 <- function() {
   segments(106,  u34, 106,  u7,  lwd=2)
   segments(106,  u7,  108,  u7,  lwd=2)
 }
-draw_framework()
+draw_framework(y0=154, y1=196)
 draw_multiline()
 cin2()
 ```
 
-```{r step8_cin1, fig.width=3.33, fig.height=3.33, echo=FALSE}
+**par("cin")** *(r.o.)* (width, height) in inches
+
+**par("csi")** *(r.o.)* height in inches
+
+**par("cra")** *(r.o.)* (width, height) in pixels
+
+**par("cxy")** *(r.o.)* (width, height) in xy coordinates
+
+The single value returned by the **csi** argument of **par** gives you the height of a line of text in inches. The second of the two values returned by **cin**, **cra**, and **cxy** also gives you the height of a line, in inches, pixels, or xy (user) coordinates.
+
+```{r step8_cin1, fig.width=3.33, fig.height=1.33, echo=FALSE}
 cin1 <- function() {
   u <- 0.67*par("cxy")[1]
   v <- 0.67*strheight("W")
@@ -151,11 +157,19 @@ cin1 <- function() {
   segments(110, z-3.0*v, 110,  z-6.0*v, lwd=2)
   segments(110, z-6.0*v, 125,  z-6.0*v, lwd=2)
 }
-draw_framework()
+draw_framework(y0=101, y1=133)
 cin1()
 ```
 
-Draw everything
+The first of the two values returned by the **cin**, **cra**, and **cxy** arguments to **par** gives you the approximate width of a single character, in inches, pixels, or xy (user) coordinates. The width, very slightly smaller than the actual width of the letter "W", is a rough estimate at best and ignores the variable with of individual letters. These values are useful, however, in providing fast ratios of the relative sizes of the differing units of measure
+
+**px.per.in <- par("cra") / par("cin")**
+
+**px.per.xy <- par("cra") / par("cxy")**
+
+**xy.per.in <- par("cxy") / par("cin")**
+
+## Draw everything
 
 ```{r everything, fig.width=3.33, fig.height=3.33, echo=FALSE}
 draw_framework()
@@ -165,16 +179,3 @@ draw_width()
 cin2()
 cin1()
 ```
-
-**par("cin")** *(r.o.)* (width, height) in inches
-
-**par("csi")** *(r.o.)* height in inches
-
-**par("cra")** *(r.o.)* (width, height) in pixels
-
-**par("cxy")** *(r.o.)* (width, height) in user coordinates
-
-You can query the approximate size of individual characters using various **par** arguments. Three of these arguments, cin, cra, and cxy, give the size of the width and height as a vector of length 2. The csi argument gives the height only.
-
-The height is the height of a line and the width is the same no matter which letter you choose.
-
