@@ -1,0 +1,89 @@
+---
+title: "measure-panels"
+author: "Steve Simon"
+date: "September 17, 2016"
+output: html_document
+---
+
+The following code is part of an R Cheat Sheet, How Big Is Your Graph.
+
+```{r step8_panel, fig.width=3.33, fig.height=3.33, echo=FALSE}
+
+  par(mar=rep(0, 4), xaxs="i", yaxs="i", cex=0.67, tcl=-0.2)
+  plot(c(100, 900), c(100, 900), type="n", axes=FALSE)
+  g <- c(200, 500, 800)
+  segments(g, 200, g, 800, lty="dotted")
+  segments(200, g, 800, g, lty="dotted")
+
+  polygon(
+    x=c(540, 760, 760, 540),
+    y=c(540, 540, 760, 760),
+    density=NA, col="olivedrab", border=NULL)
+  polygon(
+    x=c(550, 750, 750, 550),
+    y=c(550, 550, 750, 750),
+    density=NA, col="olivedrab1", border="black", lty="dotted")
+  axis(side=1, pos=540, at=c(550, 750), labels=rep(" ", 2), lwd=2)
+  axis(side=2, pos=540, at=c(550, 750), labels=rep(" ", 2), lwd=2)
+  
+  polygon(
+    x=c(240, 460, 460, 240),
+    y=c(540, 540, 760, 760),
+    density=NA, col="olivedrab", border=NULL)
+  polygon(
+    x=c(250, 450, 450, 250),
+    y=c(550, 550, 750, 750),
+    density=NA, col="olivedrab1", border="black", lty="dotted")
+  axis(side=1, pos=540, at=c(250, 450), labels=rep(" ", 2), lwd=2)
+  axis(side=2, pos=240, at=c(550, 750), labels=rep(" ", 2), lwd=2)
+  
+  polygon(
+    x=c(240, 460, 460, 240),
+    y=c(240, 240, 460, 460),
+    density=NA, col="olivedrab", border=NULL)
+  polygon(
+    x=c(250, 450, 450, 250),
+    y=c(250, 250, 450, 450),
+    density=NA, col="olivedrab1", border="black", lty="dotted")
+  axis(side=1, pos=240, at=c(250, 450), labels=rep(" ", 2), lwd=2)
+  axis(side=2, pos=240, at=c(250, 450), labels=rep(" ", 2), lwd=2)
+
+  polygon(x=c(110, 890, 890, 110), y=c(110, 110, 890, 890), lwd=2, lty="dashed")
+
+  arrows(560, 240, 500, 240, lwd=2, length=0.05)
+  arrows(740, 240, 800, 240, lwd=2, length=0.05)
+  arrows(540, 260, 540, 200, lwd=2, length=0.05)
+  arrows(540, 440, 540, 500, lwd=2, length=0.05)
+  text(650, 230, "fig[1] (pct)\nfin[1] (in)")
+  text(530, 350, "fig[2] (pct)\nfin[2] (in)", srt=90)
+  
+  arrows(230, 110, 230, 200, lwd=2, length=0.05, code=3)
+  arrows(230, 800, 230, 890, lwd=2, length=0.05, code=3)
+  arrows(110, 230, 200, 230, lwd=2, length=0.05, code=3)
+  arrows(800, 230, 890, 230, lwd=2, length=0.05, code=3)
+  segments(230, 155, 290, 155, lwd=2)
+  segments(230, 845, 290, 845, lwd=2)
+  segments(155, 290, 155, 230, lwd=2)
+  segments(845, 290, 845, 230, lwd=2)
+  text(300, 155, "oma[1] (lines), omd[1] (pct), omi[1] (in)", adj=0)
+  text(300, 845, "oma[3] (lines), omd[3] (pct), omi[3] (in)", adj=0)
+  text(155, 300, "oma[2] (lines), omd[2] (pct), omi[2] (in)", adj=0, srt=90)
+  text(845, 300, "oma[4] (lines), omd[4] (pct), omi[4] (in)", adj=0, srt=90)
+```
+
+## Panels
+
+**par("fig")** (width, height) in pct
+
+**par("fin")** (width, height) in inches
+
+**par("oma")** (bottom, left, top, right) in lines
+
+**par("omd")** (bottom, left, top, right) in pct
+
+**par("omi")** (bottom, left, top, right) in inches
+
+If you display multiple plots within a single graphics window (e.g., with **par("mfrow")** or **par("mfcol")** or the **layout** function), then the **fig** and **fin** arguments to **par** will tell you the size of the current subplot window in percent or inches, respectively.
+
+Each subplot will have margins specified by **mai** or **mar**, but there are no outer margin around the entire set of plots, unless you specify them using **oma**, **omd**, or **omi**. You can place text in the outer margins using the **mtext** function with the argument **outer=TRUE**.
+
