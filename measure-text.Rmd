@@ -14,8 +14,8 @@ draw_framework <- function(y0=104, y1=196) {
   par(mar=rep(0.6, 4), xaxs="i", yaxs="i")
   plot(c(100, 200), c(y0-4, y1+4), type="n", axes=FALSE)
   axis(side=1, at=c(104, 196), labels=rep(" ", 2))
-  polygon(x=c(100, 100, 200, 200), y=c(y0-4, y1+4, y1+4, y0-4), col="olivedrab1", border=NA)
-  polygon(x=c(104, 104, 196, 196), y=c(y0,   y1,   y1,   y0),   col="olivedrab",  border="black", lty="dotted")
+  polygon(x=c(100, 100, 200, 200), y=c(y0-4, y1+4, y1+4, y0-4), col="olivedrab",  border=NA)
+  polygon(x=c(104, 104, 196, 196), y=c(y0,   y1,   y1,   y0),   col="olivedrab1", border="black", lty="dotted")
   axis(side=1, at=c(104, 196), labels=rep(" ", 2), lwd=2)
   axis(side=2, at=c(y0, y1), labels=rep(" ", 2), lwd=2)
 }

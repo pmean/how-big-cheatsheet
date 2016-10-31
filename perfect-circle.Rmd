@@ -15,8 +15,8 @@ draw.circle <- function(x0, y0, r, ...) {
   y.circle <- y0 + r * sin(pi.seq)
   polygon(x.circle, y.circle, ...)
 }
-plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
-draw.circle(5, 80, 5, lty="dotted")
+plot(0, 0, xlim=c(0, 20), ylim=c(0, 50), type="n", xlab=" ", ylab=" ")
+draw.circle(5, 25, 5, lty="dotted")
 text(5, 80, "r=5 (usr)")
 dv <- dev.size()
 ma <- par("mai")
@@ -25,11 +25,11 @@ us <- par("usr")
 
 There are three things that are contributing to this problem.
 
-1. The default graph in R Markdown is rectangular. You can measure the size of a graph in inches with the dev.size() function: `r dv`
+1. The default graph in R Markdown is rectangular. You can measure the size of a graph in inches with the **dev.size()** function: `r dv`
 
-2. The default margins are uneven with more margins on the top and bottom compared to the left and right sides. You can measure the size of the margins in inches with par("mai"): `r ma`. The size of the bottom margin is listed first, followed by the left, top, and right margins.
+2. The default margins are uneven with more margins on the top and bottom compared to the left and right sides. You can measure the size of the margins in inches with **par("mai")**: `r ma`. The size of the bottom margin is listed first, followed by the left, top, and right margins.
 
-3. The number of units on this graph are different for the x-axis and the y-axis. You can measure the minimum and maximum values on the x and y axes using par("usr"): `r us`. Note that, by default, R adds an extra 4% to each end of the axis to reduce problems with clipping.
+3. The number of units on this graph are different for the x-axis and the y-axis. You can measure the minimum and maximum values on the x and y axes using **par("usr")**: `r us`. Note that, by default, R adds an extra 4% to each end of the axis to reduce problems with clipping.
 
 It's not necessarily bad to see an ellipse where you were expecting a circle. But if you do want a perfect circle, you need to calculate the size of the plotting region and adjust appropriately.
 
@@ -63,12 +63,12 @@ convert_to_inches <- function() {
   return(list(x=ratio[1], y=ratio[2]))
 }
 
-plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
-draw.circle( 5, 80, 5, lty="dotted")
-text( 5, 80, "r=5 (usr)")
+plot(0, 0, xlim=c(0, 20), ylim=c(0, 50), type="n", xlab=" ", ylab=" ")
+draw.circle( 5, 25, 5, lty="dotted")
+text( 5, 25, "r=5 (usr)")
 verbose <- TRUE
-draw.circle(15, 80, 0.5, convert_to_inches, col="red")
-text(15, 80, "r=0.5 (in)")
+draw.circle(15, 25, 0.5, convert_to_inches, col="red")
+text(15, 25, "r=0.5 (in)")
 ```
 
 The concept of inches in a graph is a loose one at best. The half inch radius shown above might appears slightly bigger or slightly smaller than a half inch and it will probably change when you move from one computer monitor to another. The size will probably change when you print this graph.
@@ -79,121 +79,16 @@ https://cran.r-project.org/bin/windows/base/old/2.0.1/rw-FAQ.html#Circles-appear
 
 You may wish to specify the size of your circle in pixels instead. This may or may not be a more stable measure. To do this, you need a measure of pixels per inch.
 
-```{r calculate-pixels}
-convert_to_pixels <- function() {
-  # This funciton adjusts from user coordinates to pixels.
-  # There is a short-cut: ratio <- par("cxy") / par("cra")
+You can also draw a circle using **pch=21** or **pch="o"** or **pch="O"**. The latter two choices are not quite perfect circles, but come pretty close. You can control the size of these circles using the pointsize and/or cex arguments. With **pch=21**, you can control the fill color with the bg argument.
 
-  # Range of the plotting region in user coordinates
-  plot.range.usr <- c(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3])
-  if (verbose) cat("\nThe range of the plotting region is", plot.range.usr, "in user coordinates")
-  
-  # Ratio of pixels to inch
-  pixels.per.inch <- dev.size(units="px") / dev.size(units="in")
-  if (verbose) cat("\nThere are", pixels.per.inch, "pixels per inch")
-
-  # Range of the plotting region in inches
-  plot.range.px <- par("pin") * pixels.per.inch
-  if (verbose) cat("\nThe range of the plotting region is", plot.range.px, "in pixels")
-  
-  # Number of inches per user coordinate
-  ratio <- plot.range.usr / plot.range.px
-  if (verbose) cat("\nThere are", ratio, "user coordinates per pixel")
-  return(list(x=ratio[1], y=ratio[2]))
-}
-
-plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
-draw.circle( 5, 80, 5, lty="dotted")
-text( 5, 80, "r=5 (usr)")
-verbose <- FALSE
-draw.circle(15, 80, 0.5, convert_to_inches, col="red")
-text(15, 80, "r=0.5 (in)")
-verbose <- TRUE
-draw.circle( 2.5, 40, 100, convert_to_pixels, border="blue")
-text( 2.5, 40, "r=100 (px)")
+```{r pch}
+plot(0, 0, xlim=c(0, 20), ylim=c(0, 50), type="n", xlab=" ", ylab=" ")
+co <- c("black", "blue", "red", "green")
+points(rep( 5, 4), 10*(1:4), pch=21,  cex=1:4, col=co, bg=rev(co))
+points(rep(10, 4), 10*(1:4), pch="o", cex=1:4, col=co)
+points(rep(15, 4), 10*(1:4), pch="O", cex=1:4, col=co)
 ```
 
-The results on my computer system may not match the results on your computer system.
+Notice the subtle differences in shape and thickness.
 
-If you open a graphics window with the windows() function, you have the option of tweaking this ratio with the xpinch and ypinch arguments. These arguments are not available in most other functions that open a graphics device. These will typically pull a value from your operating system.
-
-A simple modification of this code will allow you to draw a perfect square, diamond, or equilateral triange. Note the fudge factors used to insure the correct lengths of the sides.
-
-```{r half-inch-square}
-draw.square <- function(x0, y0, s, adjust.units=function() {list(x=1, y=1)}, ...) {
-  # draw a circle of radius r centered at x0, y0
-  # with an adjustment in the horizontal and vertical dimensions
-  # The default adjustment is no adjustment
-  pi.seq <- c(1, 3, 5, 7) * pi/4
-  adj <- adjust.units()
-  x.circle <- x0 + adj$x * s * cos(pi.seq) / sqrt(2)
-  y.circle <- y0 + adj$y * s * sin(pi.seq) / sqrt(2)
-  polygon(x.circle, y.circle, ...)
-}
-
-draw.diamond <- function(x0, y0, s, adjust.units=function() {list(x=1, y=1)}, ...) {
-  # draw a circle of radius r centered at x0, y0
-  # with an adjustment in the horizontal and vertical dimensions
-  # The default adjustment is no adjustment
-  pi.seq <- (0:3) * pi/2
-  adj <- adjust.units()
-  x.circle <- x0 + adj$x * s * cos(pi.seq) / sqrt(2)
-  y.circle <- y0 + adj$y * s * sin(pi.seq) / sqrt(2)
-  polygon(x.circle, y.circle, ...)
-}
-
-draw.triangle <- function(x0, y0, s, adjust.units=function() {list(x=1, y=1)}, ...) {
-  # draw a circle of radius r centered at x0, y0
-  # with an adjustment in the horizontal and vertical dimensions
-  # The default adjustment is no adjustment
-  pi.seq <- pi/2 + (0:2) * 2*pi/3
-  adj <- adjust.units()
-  x.circle <- x0 + adj$x * s * cos(pi.seq) * sqrt(1/3)
-  y.circle <- y0 + adj$y * s * sin(pi.seq) * sqrt(1/3)
-  polygon(x.circle, y.circle, ...)
-}
-
-plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
-draw.circle( 5, 80, 5, lty="dotted")
-text( 5, 80, "r=5 (usr)")
-verbose <- FALSE
-draw.circle(15, 80, 0.5, convert_to_inches, col="red")
-text(15, 80, "r=0.5 (in)")
-draw.circle( 2.5, 40, 100, convert_to_pixels, border="blue")
-text( 2.5, 40, "r=100 (px)")
-draw.square(7.5, 40, 1, convert_to_inches, col="green")
-text(7.5, 40, "s=1 (in)")
-draw.diamond(12.5, 40, 150, convert_to_pixels, border="red")
-text(12.5, 40, "s=150 (px)")
-draw.triangle(17.5, 40, 1, convert_to_inches, border="red")
-text(17.5, 40, "s=1 (in)")
-```
-
-Let's see how these functions can help with string rotation.
-
-```{r rotation_1}
-plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
-lines(x=c(5, 15, 15, 5), y=c(20, 20, 80, 20))
-text(10, 20-1.5*strheight("a", units="user"), "a")
-text(15+1.5*strwidth("b"), 50, "b")
-ctext <- expression(sqrt(a^2+b^2))
-text(10, 50+1.5*strheight(ctext), ctext)
-```
-
-That looks nice, but wouldn't it be better if you could tilt the formula on the hypotenuse? You can do this with the srt argument, but you need to rotate in the dimensions of the graph (in inches or pixels).
-
-```{r rotation_2}
-plot(0, 0, xlim=c(0, 20), ylim=c(0, 100), type="n", xlab=" ", ylab=" ")
-lines(x=c(5, 15, 15, 5), y=c(20, 20, 80, 20))
-text(10, 20-1.5*strheight("a", units="user"), "a")
-text(15+1.5*strwidth("b"), 50, "b")
-delta.x <- 15-5
-delta.y <- 80-20
-adj <- convert_to_inches()
-print(adj)
-hyp.angle <- atan2(delta.y/adj$y, delta.x/adj$x) * 180 / pi
-print(hyp.angle)
-ctext <- expression(sqrt(a^2+b^2))
-text(10, 50+1.5*strheight(ctext), ctext, srt=hyp.angle)
-```
-
+If you try this code on your system, your results may not match the results you see here, for a wide variety of reasons that are impossible to list. Graphics are often the result of trial and error, and if you don't get the results you want right away, keep plugging away.
