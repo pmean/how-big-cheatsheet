@@ -144,9 +144,9 @@ $(document).ready(function () {
 </ol>
 <p>The <strong>Sys.Date</strong> and <strong>Sys.Time</strong> functions (notice the inconsistent capitalization) will compute the current date and the current date/time values. By default, R displays these values using ISO 8601 format. <strong>Sys.Date</strong> produces a Date object and <strong>Sys.time</strong> produces a POSIXct object (POSIXct inherits from POSIXt, more information below). The <strong>Sys.timezone</strong> function will return a three character string that tells you which timezone your computer thinks it is using.</p>
 <pre class="r"><code>Sys.Date()</code></pre>
-<pre><code>## [1] &quot;2016-11-17&quot;</code></pre>
+<pre><code>## [1] &quot;2016-11-18&quot;</code></pre>
 <pre class="r"><code>Sys.time()</code></pre>
-<pre><code>## [1] &quot;2016-11-17 22:02:15 CST&quot;</code></pre>
+<pre><code>## [1] &quot;2016-11-18 10:31:09 CST&quot;</code></pre>
 <pre class="r"><code>Sys.timezone()</code></pre>
 <pre><code>## [1] &quot;America/Chicago&quot;</code></pre>
 <pre class="r"><code>attributes(Sys.Date())</code></pre>
@@ -230,13 +230,13 @@ $(document).ready(function () {
 </ul>
 <p>You can use these individual formats with a variety of delimiters to produce just about any date or date/time format.</p>
 <pre class="r"><code>format(Sys.Date(), &quot;%m-%d-%y&quot;)</code></pre>
-<pre><code>## [1] &quot;11-17-16&quot;</code></pre>
+<pre><code>## [1] &quot;11-18-16&quot;</code></pre>
 <pre class="r"><code>format(Sys.Date(), &quot;%d%b%Y&quot;)</code></pre>
-<pre><code>## [1] &quot;17Nov2016&quot;</code></pre>
+<pre><code>## [1] &quot;18Nov2016&quot;</code></pre>
 <pre class="r"><code>format(Sys.Date(), &quot;%A, %B %d&quot;)</code></pre>
-<pre><code>## [1] &quot;Thursday, November 17&quot;</code></pre>
+<pre><code>## [1] &quot;Friday, November 18&quot;</code></pre>
 <pre class="r"><code>format(Sys.time(), &quot;%I:%M O'Clock&quot;) </code></pre>
-<pre><code>## [1] &quot;10:02 O'Clock&quot;</code></pre>
+<pre><code>## [1] &quot;10:31 O'Clock&quot;</code></pre>
 </div>
 <div id="helpful-functions" class="section level2">
 <h2>Helpful functions</h2>
@@ -374,38 +374,80 @@ for (i in 1:26) {
 <div id="translating-strings-to-dates" class="section level2">
 <h2>Translating strings to dates</h2>
 <ol style="list-style-type: decimal">
-<li><strong>as.Date</strong></li>
+<li><p><strong>as.Date</strong></p></li>
+<li><p><strong>lubridate::ymd</strong> (or <strong>mdy</strong> or <strong>dmy</strong>)</p></li>
 </ol>
 <p>You can translate a string to a date using the as.Date function. If you provide a two digit year as input, R interprets values from 68-99 as 1968-1999 and 00-67 as 2000-2067. At least, this is the convention in 2016, but this will almost certainly change over time. You should avoid using two digit years as input if you can. If you can’t, check your results carefully.</p>
 <p>The *as.Date** function will automatically translate any date in the ISO 8601 format. Dates in alternate formats require use of the format codes shown above.</p>
 <pre class="r"><code>as.Date(&quot;1963-11-22&quot;)</code></pre>
 <pre><code>## [1] &quot;1963-11-22&quot;</code></pre>
 </div>
+<div id="translating-strings-to-times" class="section level2">
+<h2>Translating strings to times</h2>
+<ol style="list-style-type: decimal">
+<li><strong>lubridate::hms()</strong> (or <strong>hm</strong> or <strong>ms</strong>)</li>
+</ol>
+<pre class="r"><code>library(&quot;lubridate&quot;)</code></pre>
+<pre><code>## Warning: package 'lubridate' was built under R version 3.3.2</code></pre>
+<pre><code>## 
+## Attaching package: 'lubridate'</code></pre>
+<pre><code>## The following object is masked from 'package:base':
+## 
+##     date</code></pre>
+<pre class="r"><code>hm(&quot;10:22pm&quot;)</code></pre>
+<pre><code>## [1] &quot;10H 22M 0S&quot;</code></pre>
+<pre class="r"><code>attributes(hm(&quot;10:22pm&quot;))</code></pre>
+<pre><code>## $year
+## [1] 0
+## 
+## $month
+## [1] 0
+## 
+## $day
+## [1] 0
+## 
+## $hour
+## [1] 10
+## 
+## $minute
+## [1] 22
+## 
+## $class
+## [1] &quot;Period&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;lubridate&quot;</code></pre>
+</div>
+<div id="translating-stings-to-datetime" class="section level2">
+<h2>Translating stings to date/time</h2>
+<ol style="list-style-type: decimal">
+<li><strong>lubridate:ymd_hms</strong></li>
+</ol>
+</div>
 <div id="internal-representation" class="section level2">
 <h2>Internal representation</h2>
 <p>R stores Date objects internally as the number of days since 1970-01-01 and POXIXct objects as the number of seconds since 1970-10-01 00:00:00. The POSIXlt object is a list ($sec, $min, etc.).</p>
 <pre class="r"><code>strptime(&quot;10:11:12&quot;, &quot;%H:%M:%S&quot;)</code></pre>
-<pre><code>## [1] &quot;2016-11-17 10:11:12 CST&quot;</code></pre>
+<pre><code>## [1] &quot;2016-11-18 10:11:12 CST&quot;</code></pre>
 <pre class="r"><code>as.numeric(as.Date(&quot;1970-01-01&quot;))</code></pre>
 <pre><code>## [1] 0</code></pre>
 <pre class="r"><code>as.numeric(Sys.Date())</code></pre>
-<pre><code>## [1] 17122</code></pre>
+<pre><code>## [1] 17123</code></pre>
 <pre class="r"><code>as.numeric(Sys.time())</code></pre>
-<pre><code>## [1] 1479441736</code></pre>
+<pre><code>## [1] 1479486671</code></pre>
 <pre class="r"><code>as.numeric(Sys.time())/(24*60*60)</code></pre>
-<pre><code>## [1] 17123.17</code></pre>
+<pre><code>## [1] 17123.69</code></pre>
 <pre class="r"><code>print.default(as.POSIXlt(Sys.time()))</code></pre>
 <pre><code>## $sec
-## [1] 15.8561
+## [1] 10.65088
 ## 
 ## $min
-## [1] 2
+## [1] 31
 ## 
 ## $hour
-## [1] 22
+## [1] 10
 ## 
 ## $mday
-## [1] 17
+## [1] 18
 ## 
 ## $mon
 ## [1] 10
@@ -414,10 +456,10 @@ for (i in 1:26) {
 ## [1] 116
 ## 
 ## $wday
-## [1] 4
+## [1] 5
 ## 
 ## $yday
-## [1] 321
+## [1] 322
 ## 
 ## $isdst
 ## [1] 0

@@ -31,7 +31,7 @@ Even the counting of leap seconds can produce problems, if you need accuracy at 
 
 3. **Sys.timezone()**
 
-The **Sys.Date** and **Sys.Time** functions (notice the inconsistent capitalization) will compute the current date and the current date/time values. By default, R displays these values using ISO 8601 format. **Sys.Date** produces a Date object and **Sys.time** produces a POSIXct object (POSIXct inherits from POSIXt, more information below). The **Sys.timezone** function will return a three character string that tells you which timezone your computer thinks it is using.
+The **Sys.Date** and **Sys.Time** functions (notice the inconsistent capitalization) will compute the current date and the current date/time values. By default, R displays these values using ISO 8601 format. **Sys.Date** produces a Date object and **Sys.time** produces a POSIXct object (POSIXct inherits from POSIXt, more information below). The **Sys.timezone** function will return a three character string that tells you which time zone your computer thinks it is using.
 
 ```{r current}
 Sys.Date()

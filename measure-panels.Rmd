@@ -82,11 +82,7 @@ The following code is part of an R Cheat Sheet, How Big Is Your Graph.
 
 **par("fin")** (width, height) in inches
 
-<<<<<<< HEAD
 If you display multiple plots within a single graphics window (e.g., with **mfrow** or **mfcol** arguments of **par** or with the **layout** function), then the **fig** and **fin** arguments  will tell you the size of the current subplot window in percent or inches, respectively.
-=======
-If you display multiple plots within a single graphics window (e.g., with **par("mfrow")** or **par("mfcol")** or the **layout** function), then the **fig** and **fin** arguments to **par** will tell you the size of the current subplot window in percent or inches, respectively.
->>>>>>> 7660b83c042793b9cd211c5b37b427d0c0d68759
 
 **par("oma")** (bottom, left, top, right) in lines
 
@@ -104,5 +100,4 @@ Each subplot will have margins specified by **mai** or **mar**, but no outer mar
 
 **par("mgp")** (row, col)
 
->>>>>>> 7660b83c042793b9cd211c5b37b427d0c0d68759
 The **mgp** argument of **par** will allow you to jump to a subplot in a particular row and column. If you query with **par("mfg")**, you will get the current row and column followed by the maximum row and column.
