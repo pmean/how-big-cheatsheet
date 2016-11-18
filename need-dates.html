@@ -142,11 +142,11 @@ $(document).ready(function () {
 <li><p><strong>Sys.time()</strong></p></li>
 <li><p><strong>Sys.timezone()</strong></p></li>
 </ol>
-<p>The <strong>Sys.Date</strong> and <strong>Sys.Time</strong> functions (notice the inconsistent capitalization) will compute the current date and the current date/time values. By default, R displays these values using ISO 8601 format. <strong>Sys.Date</strong> produces a Date object and <strong>Sys.time</strong> produces a POSIXct object (POSIXct inherits from POSIXt, more information below). The <strong>Sys.timezone</strong> function will return a three character string that tells you which timezone your computer thinks it is using.</p>
+<p>The <strong>Sys.Date</strong> and <strong>Sys.Time</strong> functions (notice the inconsistent capitalization) will compute the current date and the current date/time values. By default, R displays these values using ISO 8601 format. <strong>Sys.Date</strong> produces a Date object and <strong>Sys.time</strong> produces a POSIXct object (POSIXct inherits from POSIXt, more information below). The <strong>Sys.timezone</strong> function will return a three character string that tells you which time zone your computer thinks it is using.</p>
 <pre class="r"><code>Sys.Date()</code></pre>
 <pre><code>## [1] &quot;2016-11-18&quot;</code></pre>
 <pre class="r"><code>Sys.time()</code></pre>
-<pre><code>## [1] &quot;2016-11-18 10:31:09 CST&quot;</code></pre>
+<pre><code>## [1] &quot;2016-11-18 13:40:43 CST&quot;</code></pre>
 <pre class="r"><code>Sys.timezone()</code></pre>
 <pre><code>## [1] &quot;America/Chicago&quot;</code></pre>
 <pre class="r"><code>attributes(Sys.Date())</code></pre>
@@ -156,18 +156,73 @@ $(document).ready(function () {
 <pre><code>## $class
 ## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;</code></pre>
 </div>
+<div id="internal-representation" class="section level2">
+<h2>Internal representation</h2>
+<p>R stores <strong>Date</strong> objects internally as the number of days since 1970-01-01 and <strong>POXIXct</strong> objects as the number of seconds since 1970-10-01 00:00:00. The <strong>POSIXlt</strong> object is a list ($sec, $min, etc.).</p>
+<pre class="r"><code>strptime(&quot;10:11:12&quot;, &quot;%H:%M:%S&quot;)</code></pre>
+<pre><code>## [1] &quot;2016-11-18 10:11:12 CST&quot;</code></pre>
+<pre class="r"><code>as.numeric(as.Date(&quot;1970-01-01&quot;))</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>as.numeric(Sys.Date())</code></pre>
+<pre><code>## [1] 17123</code></pre>
+<pre class="r"><code>as.numeric(Sys.time())</code></pre>
+<pre><code>## [1] 1479498043</code></pre>
+<pre class="r"><code>as.numeric(Sys.time())/(24*60*60)</code></pre>
+<pre><code>## [1] 17123.82</code></pre>
+<pre class="r"><code>print.default(as.POSIXlt(Sys.time()))</code></pre>
+<pre><code>## $sec
+## [1] 43.09832
+## 
+## $min
+## [1] 40
+## 
+## $hour
+## [1] 13
+## 
+## $mday
+## [1] 18
+## 
+## $mon
+## [1] 10
+## 
+## $year
+## [1] 116
+## 
+## $wday
+## [1] 5
+## 
+## $yday
+## [1] 322
+## 
+## $isdst
+## [1] 0
+## 
+## $zone
+## [1] &quot;CST&quot;
+## 
+## $gmtoff
+## [1] -21600
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;POSIXlt&quot; &quot;POSIXt&quot; 
+## attr(,&quot;tzone&quot;)
+## [1] &quot;&quot;    &quot;CST&quot; &quot;CDT&quot;</code></pre>
+</div>
 <div id="converting-to-strings" class="section level2">
 <h2>Converting to strings</h2>
 <ol style="list-style-type: decimal">
-<li><p><strong>format()</strong> or <strong>format.Date()</strong> converts a Date object to a string</p></li>
-<li><p><strong>strftime()</strong> converts a POSIXt object to string</p></li>
+<li><p><strong>format()</strong> or <strong>format.Date()</strong></p></li>
+<li><p><strong>strftime()</strong></p></li>
+<li><p><strong>as.POSIXlt()</strong></p></li>
 </ol>
-<p>The <strong>format</strong> (used for Date objects) and <strong>strftime</strong> (used for POSIXt objects) use a format string to layout the date or date/time value in a wide variety of orders and formats.</p>
+<p>You can display or extract information using the <strong>format</strong> or <strong>strftime</strong> functions. The <strong>format</strong> function is a generic function with a special method (<strong>format.Date</strong>) for <strong>Date</strong> objects (and anything that can be easily converted to a <strong>Date</strong> object. The <strong>strftime</strong> function performs the same role for <strong>POSIXt</strong> objects (or, again, for anything that can easily be converted). Both functions use a format argument which is one or more of format codes starting with a percent sign, and various delimiters and other text.</p>
+<p>The <strong>as.POSIXlt</strong> function converts a <strong>Date</strong> object or a POSIXct object to a <strong>POSIXlt</strong> object, which allows you to extract various date and/or time components from the resulting list.</p>
+<p>You also can extract date/time information with a range of functions in <strong>Base R</strong> and in the <strong>chron</strong> and <strong>lubridate</strong> packages.</p>
 <p>Year formats</p>
 <ul>
-<li><p>%C - Century code (“19” for 1900-1999, “20” for 2000-2099, etc.)</p></li>
-<li><p>%y - two digit year (“00”, “01”, …, “99”)</p></li>
-<li><p>%Y - four digit year</p></li>
+<li><p><strong>%C</strong> - Century code (“19” for 1900-1999, “20” for 2000-2099, etc.)</p></li>
+<li><p><strong>%y</strong> - two digit year (“00”, “01”, …, “99”)</p></li>
+<li><p><strong>%Y</strong> - four digit year</p></li>
 <li><p><strong>asPOSIXlt()$year</strong> - numeric value of years since 1900 (116 would be 116 years past 1900 or 2016)</p></li>
 </ul>
 <p>Quarter formats</p>
@@ -176,29 +231,29 @@ $(document).ready(function () {
 </ul>
 <p>Month formats</p>
 <ul>
-<li><p>%b, %h - three character month name (“Jan”, “Feb”, …, “Dec”)</p></li>
-<li><p>%B or <strong>chron:: months()</strong> - full month name (“January”, “February”, …, “December”)</p></li>
-<li><p>%m - two digit month number (“01”, “02”, …, “12”)</p></li>
+<li><p><strong>%b</strong>, <strong>%h</strong> - three character month name (“Jan”, “Feb”, …, “Dec”)</p></li>
+<li><p><strong>%B</strong> or <strong>chron:: months()</strong> - full month name (“January”, “February”, …, “December”)</p></li>
+<li><p><strong>%m</strong> - two digit month number (“01”, “02”, …, “12”)</p></li>
 <li><p><strong>asPOSIXlt()$mon</strong> - numeric value for month (1, 2, …, 12)</p></li>
 </ul>
 <p>Week formats</p>
 <ul>
-<li><p>%V - week of the year (“01”, “02”, …, “53”)</p></li>
-<li><p>%W - week of the year (“00”, “01”, …, “53”)</p></li>
+<li><p><strong>%V</strong> - week of the year (“01”, “02”, …, “53”)</p></li>
+<li><p><strong>%W</strong> - week of the year (“00”, “01”, …, “53”)</p></li>
 </ul>
-<p>Note: for %V, counting starts on the first week with 4 or more days. Weeks at the beginning of the year with three or less days are considered part of the previous year. For $W, week 01 is the first full week of the year. If the year does not start on a Monday, the partial week is numbered 00. The %g and %G formats give the two digit and four digit years from a week-based perspective. It coincides with the traditional year except when a three day or shorter partial week at the beginning of the year places you in the previous year (e.g., Saturday, January 2, 2016 is actually part of the 53rd week of 2015.</p>
+<p>Note: for %V, counting starts on the first week with 4 or more days. Weeks at the beginning of the year with three or less days are considered part of the previous year. For <strong>$W</strong>, week 01 is the first full week of the year. If the year does not start on a Monday, the partial week is numbered 00. The <strong>%g</strong> and <strong>%G</strong> formats give the two digit and four digit years from a week-based perspective. It coincides with the traditional year except when a three day or shorter partial week at the beginning of the year places you in the previous year (e.g., Saturday, January 2, 2016 is actually part of the 53rd week of 2015.</p>
 <p>Day formats</p>
 <ul>
-<li><p>%A or <strong>weekdays()</strong> - full week day name (“Monday”, “Tuesday”, …, “Sunday”)</p></li>
-<li><p>%a - three character week day (“Mon”, “Tue”, …, “Sun”)</p></li>
-<li><p>%d - two digit day with leading zeros (“01”, “02”, …, “31”)</p></li>
-<li><p>%e - two digit day with leading blanks (&quot; 1“,” 2“, …,”31“)</p></li>
+<li><p><strong>%A</strong> or <strong>weekdays()</strong> - full week day name (“Monday”, “Tuesday”, …, “Sunday”)</p></li>
+<li><p><strong>%a</strong> - three character week day (“Mon”, “Tue”, …, “Sun”)</p></li>
+<li><p><strong>%d</strong> - two digit day with leading zeros (“01”, “02”, …, “31”)</p></li>
+<li><p><strong>%e</strong> - two digit day with leading blanks (&quot; 1“,” 2“, …,”31“)</p></li>
 <li><p><strong>asPOSIXlt()$mday</strong> - numeric value for day of the month (1, 2, …, 31)</p></li>
 <li><p><strong>chron::days()</strong> - ordered factor for day of the month (1, 2, …, 31)</p></li>
-<li><p>%j - three digit day of the year (“001”, “002”, …, “366”)</p></li>
+<li><p><strong>%j</strong> - three digit day of the year (“001”, “002”, …, “366”)</p></li>
 <li><p><strong>as.POSIXlt()$yday</strong> - numeric value for day of the year (1, 2, …, 366)</p></li>
-<li><p>%u - single digit day (“1”=Monday, “2”, …, “7”)</p></li>
-<li><p>%v - single digit day (“0”=Monday, “1”, …, “6”)</p></li>
+<li><p><strong>%u</strong> - single digit day (“1”=Monday, “2”, …, “7”)</p></li>
+<li><p><strong>%v</strong> - single digit day (“0”=Monday, “1”, …, “6”)</p></li>
 <li><p><strong>as.POSIXlt()$wday</strong> - numeric value for day (1=Monday, 2, …, 7)</p></li>
 </ul>
 <p>Hour formats</p>
@@ -236,7 +291,7 @@ $(document).ready(function () {
 <pre class="r"><code>format(Sys.Date(), &quot;%A, %B %d&quot;)</code></pre>
 <pre><code>## [1] &quot;Friday, November 18&quot;</code></pre>
 <pre class="r"><code>format(Sys.time(), &quot;%I:%M O'Clock&quot;) </code></pre>
-<pre><code>## [1] &quot;10:31 O'Clock&quot;</code></pre>
+<pre><code>## [1] &quot;01:40 O'Clock&quot;</code></pre>
 </div>
 <div id="helpful-functions" class="section level2">
 <h2>Helpful functions</h2>
@@ -422,58 +477,6 @@ for (i in 1:26) {
 <ol style="list-style-type: decimal">
 <li><strong>lubridate:ymd_hms</strong></li>
 </ol>
-</div>
-<div id="internal-representation" class="section level2">
-<h2>Internal representation</h2>
-<p>R stores Date objects internally as the number of days since 1970-01-01 and POXIXct objects as the number of seconds since 1970-10-01 00:00:00. The POSIXlt object is a list ($sec, $min, etc.).</p>
-<pre class="r"><code>strptime(&quot;10:11:12&quot;, &quot;%H:%M:%S&quot;)</code></pre>
-<pre><code>## [1] &quot;2016-11-18 10:11:12 CST&quot;</code></pre>
-<pre class="r"><code>as.numeric(as.Date(&quot;1970-01-01&quot;))</code></pre>
-<pre><code>## [1] 0</code></pre>
-<pre class="r"><code>as.numeric(Sys.Date())</code></pre>
-<pre><code>## [1] 17123</code></pre>
-<pre class="r"><code>as.numeric(Sys.time())</code></pre>
-<pre><code>## [1] 1479486671</code></pre>
-<pre class="r"><code>as.numeric(Sys.time())/(24*60*60)</code></pre>
-<pre><code>## [1] 17123.69</code></pre>
-<pre class="r"><code>print.default(as.POSIXlt(Sys.time()))</code></pre>
-<pre><code>## $sec
-## [1] 10.65088
-## 
-## $min
-## [1] 31
-## 
-## $hour
-## [1] 10
-## 
-## $mday
-## [1] 18
-## 
-## $mon
-## [1] 10
-## 
-## $year
-## [1] 116
-## 
-## $wday
-## [1] 5
-## 
-## $yday
-## [1] 322
-## 
-## $isdst
-## [1] 0
-## 
-## $zone
-## [1] &quot;CST&quot;
-## 
-## $gmtoff
-## [1] -21600
-## 
-## attr(,&quot;class&quot;)
-## [1] &quot;POSIXlt&quot; &quot;POSIXt&quot; 
-## attr(,&quot;tzone&quot;)
-## [1] &quot;&quot;    &quot;CST&quot; &quot;CDT&quot;</code></pre>
 </div>
 <div id="importing-dates-from-other-systems" class="section level2">
 <h2>Importing dates from other systems</h2>
