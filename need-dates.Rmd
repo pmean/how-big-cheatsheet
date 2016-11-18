@@ -1,0 +1,245 @@
+---
+title: "R programmers need dates"
+author: "Steve Simon"
+date: "November 4, 2016"
+output: html_document
+---
+
+## Introduction
+
+You can manipulate Date and Date/Time values with a variety of functions in R. Although R tries to make reasonable interpretations, there are issues that sometimes produce inconsistencies.
+
+- Dependencies on your operating system
+
+- Dependencies on your locale
+
+- Dependencies on your language
+
+- Differing time zones and changes in time zones
+
+- Daylight savings time and changes in implementation of daylight savings time
+
+- Differing dates for implementation of the Gregorian calendar
+
+Even the counting of leap seconds can produce problems, if you need accuracy at a high enough level. For many applications, the manipulation of dates and times in R work just fine, but you should always check your results carefully.
+
+## current date and time
+
+1. **Sys.Date()**
+
+2. **Sys.time()**
+
+3. **Sys.timezone()**
+
+The **Sys.Date** and **Sys.Time** functions (notice the inconsistent capitalization) will compute the current date and the current date/time values. By default, R displays these values using ISO 8601 format. **Sys.Date** produces a Date object and **Sys.time** produces a POSIXct object (POSIXct inherits from POSIXt, more information below). The **Sys.timezone** function will return a three character string that tells you which timezone your computer thinks it is using.
+
+```{r current}
+Sys.Date()
+Sys.time()
+Sys.timezone()
+attributes(Sys.Date())
+attributes(Sys.time())
+```
+
+## Converting to strings
+
+1. **format()** or **format.Date()** converts a Date object to a string
+
+2. **strftime()** converts a POSIXt object to string
+
+The **format** (used for Date objects) and **strftime** (used for POSIXt objects) use a format string to layout the date or date/time value in a wide variety of orders and formats.
+
+Year formats
+
+- %C - Century code ("19" for 1900-1999, "20" for 2000-2099, etc.)
+
+- %y - two digit year ("00", "01", ..., "99")
+
+- %Y - four digit year
+
+- **asPOSIXlt()$year** - numeric value of years since 1900 (116 would be 116 years past 1900 or 2016)
+
+Quarter formats
+
+- **quarters()** - quarter ("Q1", "Q2", "Q3", "Q4")
+
+Month formats
+
+- %b, %h - three character month name ("Jan", "Feb", ..., "Dec")
+
+- %B or **chron:: months()** - full month name ("January", "February", ..., "December")
+
+- %m - two digit month number ("01", "02", ..., "12")
+
+- **asPOSIXlt()$mon** - numeric value for month (1, 2, ..., 12)
+
+Week formats
+
+- %V - week of the year ("01", "02", ..., "53")
+
+- %W - week of the year ("00", "01", ..., "53")
+
+Note: for %V, counting starts on the first week with 4 or more days. Weeks at the beginning of the year with three or less days are considered part of the previous year. For $W, week 01 is the first full week of the year. If the year does not start on a Monday, the partial week is numbered 00. The %g and %G formats give the two digit and four digit years from a week-based perspective. It coincides with the traditional year except when a three day or shorter partial week at the beginning of the year places you in the previous year (e.g., Saturday, January 2, 2016 is actually part of the 53rd week of 2015.
+
+Day formats
+
+- %A or **weekdays()** - full week day name ("Monday", "Tuesday", ..., "Sunday")
+
+- %a - three character week day ("Mon", "Tue", ..., "Sun")
+
+- %d - two digit day with leading zeros ("01", "02", ..., "31")
+
+- %e - two digit day with leading blanks (" 1"," 2", ..., "31")
+
+- **asPOSIXlt()$mday** - numeric value for day of the month (1, 2, ..., 31)
+
+- **chron::days()** - ordered factor for day of the month (1, 2, ..., 31)
+
+- %j - three digit day of the year ("001", "002", ..., "366")
+
+- **as.POSIXlt()$yday** - numeric value for day of the year (1, 2, ..., 366)
+
+- %u - single digit day ("1"=Monday, "2", ..., "7")
+
+- %v - single digit day ("0"=Monday, "1", ..., "6") 
+
+- **as.POSIXlt()$wday** - numeric value for day (1=Monday, 2, ..., 7)
+
+Hour formats
+
+- %H - two digit 24 hour format or military time ("00", "01", ..., 23")
+
+- **asPOSIXlt()$hour** - numeric value for hour in military time (0, 1, ..., 23)
+
+- %I - two digit 12 hour format ("01", "02", ..., "12")
+
+- %P - "am" or "pm" (Note the inconsistency here and below)
+
+- %p - "AM" or "PM"
+
+Minute formats
+
+- %M - two digit minute with leading zeros ("00", "01", ..., "59")
+
+- **as.POSIXlt()$min - numeric value for minutes (0, 1, ..., 59)
+
+Second formats
+
+- %S - two digit second with leading zeros ("00", "01", ..., "59")
+
+- **as.POSIXlt()$sec** - numeric value for seconds (0, 1, ..., 59)
+
+- **.leap.seconds** - a vector of days when a leap second was added.
+
+Note: The default is to not display fractions of a second. Change this with **options(digits.seconds=x)**.
+
+Time Zone
+
+- %z - offset from UTC time zone in hours and minutes (-1200 to 1400)
+
+- **as.POSIXlt()$gmtoff** - number of minutes offset from GMT or UTC timezone.
+
+- %Z or **as.POSIXlt()$zone** - three character abbreviation for time zone incorporating daylight savings time codes if appropriate.
+
+- **as.POSIXlt()$isdst** - indicator for daylight savings time (0, 1)
+
+You can use these individual formats with a variety of delimiters to produce just about any date or date/time format.  
+
+```{r alternate formats}
+format(Sys.Date(), "%m-%d-%y")
+format(Sys.Date(), "%d%b%Y")
+format(Sys.Date(), "%A, %B %d")
+format(Sys.time(), "%I:%M O'Clock") 
+```
+
+## Helpful functions
+
+1. **weekdays()**
+
+2. **months()**
+
+3. **quarters()**
+
+The **weekdays**, **months**, and **quarters** functions accept Date or POSIXt objects as input.
+
+
+```{r test formats}
+date_time_value <- strptime("10/11/2012 13:14:15", "%d/%m/%Y %H:%M:%S")
+for (i in 1:26) {
+  f <- paste("%", LETTERS[i], sep="")
+  result <- paste("produces", format(date_time_value, f))
+  if (nchar(result)==0 | result==LETTERS[i]) result <- " is not used"
+  cat("\n\nFormat ", f, result)
+
+    f <- paste("%", letters[i], sep="")
+  result <- paste("produces", format(date_time_value, f))
+  if (nchar(result)==0 | result==letters[i]) result <- " is not used"
+  cat("\n\nFormat ", f, result)
+}
+```
+
+Other formats ($c, %d, %F, for example) produce commonly used date formats. The results of these may vary depending on your locale.
+
+- %c is equivalent to "%a %b %h:%m:%s %Y"
+- %d is equivalent to "%m\%d\%y"
+- %F is equivalent to "%Y-%m-%d"
+
+## Translating strings to dates
+
+1. **as.Date**
+
+2. **lubridate::ymd** (or **mdy** or **dmy**)
+
+You can translate a string to a date using the as.Date function. If you provide a two digit year as input, R interprets values from 68-99 as 1968-1999 and 00-67 as 2000-2067. At least, this is the convention in 2016, but this will almost certainly change over time. You should avoid using two digit years as input if you can. If you can't, check your results carefully.
+
+The *as.Date** function will automatically translate any date in the ISO 8601 format. Dates in alternate formats require use of the format codes shown above.
+
+```{r translate to date}
+as.Date("1963-11-22")
+```
+
+## Translating strings to times
+
+1. **lubridate::hms()** (or **hm** or **ms**)
+
+```{r translate to time}
+library("lubridate")
+hm("10:22pm")
+attributes(hm("10:22pm"))
+```
+
+## Translating stings to date/time 
+
+1. **lubridate:ymd_hms**
+
+## Internal representation
+
+R stores Date objects internally as the number of days since 1970-01-01 and POXIXct objects as the number of seconds since 1970-10-01 00:00:00. The POSIXlt object is a list ($sec, $min, etc.).
+
+```{r internal_representation}
+strptime("10:11:12", "%H:%M:%S")
+as.numeric(as.Date("1970-01-01"))
+as.numeric(Sys.Date())
+as.numeric(Sys.time())
+as.numeric(Sys.time())/(24*60*60)
+print.default(as.POSIXlt(Sys.time()))
+```
+
+## Importing dates from other systems
+
+Every software system has its own way of storing dates and date/time values. Most systems count a number of days from an origin date, though the number of the origin date itself could be 0 or it could be 1. For example, SAS counts the number of days since an origin date of 1960-01-01 with the origin date itself counting as 0.
+
+Dates in Excel vary based on the operating system and the version. Excel 2013 uses an origin date of 1900-01-01 with the origin date itself counting as 1.
+
+```{r import}
+# converting SAS dates
+as.Date(0, origin="1960-01-01")
+# converting Excel 2013 dates--back up one since the origin date=1.
+as.Date(1, origin="1899-12-31")
+```
+
+R packages
+
+1. chron
+
+2. lubridate
