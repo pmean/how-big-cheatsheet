@@ -86,7 +86,7 @@ draw_framework()
 din()
 ```
 
-## Your graphics windows
+## Device size
 
 **dev.size(units)** (width, height) 
 
@@ -100,7 +100,7 @@ Both the **dev.size** function or **par("din")** will tell you the size of the g
 
 3. pixels (**units="px"**)
 
-Like several other **par** arguments, **din** is read only (r.o.) meaning that you cannot assign a value to it.
+Like several other **par** arguments, **din** is read only *(r.o.)* meaning that you can ask ts current value (**par("din")**) but you cannot change it (**par(din=c(5,7)** will fail)).
 
 ```{r step3_margins, fig.width=4.33, fig.height=4.33, echo=FALSE}
 mar <- function() {
@@ -135,6 +135,8 @@ mar()
 **par("mar")** -> (bottom, left, top, right) in lines
 
 Margins provide you space for your axes, axis, labels, and titles.
+
+A "line" is the amount of vertical space needed for a line of text. 
 
 If your graph has no axes or titles, you can remove the margins (and maximize the plotting region) with
 
@@ -179,7 +181,7 @@ pin()
 
 The **pin** argument in **par** gives you the size of the plotting region (the size of the device minus the size of the margins) in inches.
 
-The **plt** argument gives you the percentage of the device up to the left edge of the plotting region, the right edge, the bottom edge, and the top edge. The first and third values are equivalent to the percentage of space deveoted to the left and bottom margins. Subtract the second and fourth values from 1 to get the percentage of space devoted to the right and top margins.
+The **plt** argument gives you the percentage of the device from the left/bottom edge up to the left edge of the plotting region, the right edge, the bottom edge, and the top edge. The first and third values are equivalent to the percentage of space devoted to the left and bottom margins. Subtract the second and fourth values from 1 to get the percentage of space devoted to the right and top margins.
 
 # Step 5a
 
@@ -203,11 +205,44 @@ usr()
 
 **par("usr")** -> (xmin, ymin, xmax, ymax)
 
-Your x-y coordinates are the values you use when plotting your data. Run **par("usr")** to get a vector of length 4 with the user coordinates with the minimum X value, the maximum X value, the minimum Y value, and the maximum Y value. This normally is not the same as the values specified by the xlim and ylim arguments in plot. By default, R adds and extra 4% to the plotting range so that points right on the edge do not get partially clipped. You can override this using the **xaxs="i"** and/or the **yaxs="i"** arguments in par.
+Your x-y coordinates are the values you use when plotting your data. This normally is not the same as the values you specified with the **xlim** and **ylim** arguments in **plot**. By default, R adds an extra 4% to the plotting range (see the dark green region on the figure) so that points right up on the edges of your plot do not get partially clipped. You can override this by setting **xaxs="i"** and/or the **yaxs="i"** in **par**.
+
+Run **par("usr")** to find the minimum X value, the maximum X value, the minimum Y value, and the maximum Y value. If you assign new values to the ***usr**, you will update the x-y coordinates to the new values.
 
 ## Getting a square graph
 
 You can produce a square graph manually by setting the width and height to the same value and setting the margins so that the sum of the top and bottom margins equal the sum of the left and right margins. But a much easier way is to specify **pty="s"**, which adjusts the margins so that the size of the plotting region is always square, even if you resize the graphics window.
+
+## converting units
+
+For many applications, you need to be able to translate user coordinates to pixels or inches. There are some cryptic shortcuts, but the simplest way is to get the range in user coordinates and measure the proportion of the graphics device devoted to the plotting region.
+
+user.range <- par("usr")[c(2,4)] -
+  par("usr")[c(1,3)]
+
+region.pct <- par("plt")[c(2,4)] - 
+  par("plt")[c(1,3)]
+
+region.px <- 
+  dev.size(units="px") * region.pct
+
+px.per.xy <- region.px / user.range
+
+To convert a horizontal or distance from the x-coordinate value to pixels, multiply by px.per.xy[1]. To convert a vertical distance, multiply by region.px.per.xy[2]. To convert a diagonal distance, you need to invoke Pyhthagoras. 
+
+a.px <- x.dist*px.per.xy[1]
+b.px <- y.dist*px.per.xy[2]
+c.px <- sqrt(a.px^2+b.px^2)
+
+To rotate a string to match the slope of a line segment, you need to convert the distances to pixels, calculate the arctangent, and convert from radians to degrees.
+
+x0 <- 2; y0 <- 2; x1 <- 8; y1 <- 4
+segments(x0, y0, x1, y1)
+delta.x <- (x1 - x0) * px.per.xy[1]
+delta.y <- (y1 - y0) * px.per.xy[2]
+angle.radians <- atan2(delta.y, delta.x)
+angle.degrees <- angle.radians * 180 / pi
+text(x0, y0, "TEXT", srt=angle.degrees)
 
 ## A single graph with all dimensions illustrated at once
 
