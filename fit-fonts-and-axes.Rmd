@@ -1,0 +1,77 @@
+---
+title: "Fit-fonts-and-axes"
+author: "Steve Simon"
+date: "October 27, 2016"
+output: html_document
+---
+
+
+## My fonts are too big/too small
+
+Sometimes your fonts will be so large that they overlap each other or crowd out the other information in your graph. Fixing this takes a bit of trial and error. Here are some ways you can revise your graph to get more appropriate font sizes.
+
+1. Specify a larger/smaller value for the pointsize argument when you open your graphics device.
+
+2. Trying opening your graphics device with different values for height and width. Fonts that look too big might be better proportioned in a larger graphics window.
+
+3. Use the **cex** argument to increase or decrease the relative size of your fonts.
+
+## Help!! My title or axis labels won't fit.
+
+There are several possible solutions.
+
+1. You can assign wider margins using the **mar** or **mai** argument in **par**.
+
+2. You can change the orientation of the axis labels with the **las**. Choose among 
+
+a. **las=0** both axis labels parallel
+
+b. **las=1** both axis labels horizontal
+
+c. **las=2** both axis labels perpendicular
+
+d. **las=3** both axis labels vertical
+
+```{r step11_las, fig.width=1.67, fig.height=1.33, echo=FALSE}
+par(mar=rep(0,4), mfrow=c(2,2), mar=c(2.4, 2.4, 0.6, 0.6))
+par(las=0)
+plot(0:1, 0:1, type="n", axes=FALSE)
+axis(side=1, at=0:1, labels=c("las","=0"))
+axis(side=2, at=0:1, labels=c("las","=0"))
+par(las=1)
+plot(0:1, 0:1, type="n", axes=FALSE)
+axis(side=1, at=0:1, labels=c("las","=1"))
+axis(side=2, at=0:1, labels=c("=1","las"))
+par(las=2, tcl=-0.2)
+plot(0:1, 0:1, type="n", axes=FALSE)
+axis(side=1, at=0:1, labels=c("las","=2"))
+axis(side=2, at=0:1, labels=c("=2","las"))
+par(las=3)
+plot(0:1, 0:1, type="n", axes=FALSE)
+axis(side=1, at=0:1, labels=c("las","=3"))
+axis(side=2, at=0:1, labels=c("las","=3"))
+```
+
+3. change the relative size of the font
+
+a. **cex.axis** for the tick mark labels.
+
+b. **cex.lab** for **xlab** and **ylab**.
+
+c. **cex.main** for the main title
+
+d. **cex.sub** for the subtitle.
+
+```{r step11_cex, fig.width=1.67, fig.height=1.00, echo=FALSE}
+par(mar=rep(0,4), tcl=-0.2, cex=0.5)
+plot(c(0,4), c(0,2.5), type="n", axes=FALSE)
+axis(side=1, pos=1, at=1:3, labels=rep(" ", 3))
+text(1:3, rep(0.75,3), rep("cex.axis", 3))
+text(2, 0.5, "cex.lab")
+text(2, 2.25, "cex.main")
+text(2, 0.25, "cex.sub")
+axis(side=2, pos=1, at=1:2, labels=rep(" ", 2))
+text(rep(0.5,3), 1:2, rep("cex.axis", 2))
+text(0.25, 1.5, "cex.lab", srt=90)
+```
+

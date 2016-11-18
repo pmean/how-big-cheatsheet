@@ -7,7 +7,7 @@ output: html_document
 
 ## measuring pixels per user corodinate values
 
-For many applications, you need to be able to translate user coordinates to pixels or inches. Here's a simple example.
+For many applications, you need to be able to translate user coordinates to pixels or inches. Here's a simple example. Notice that you need to invoke Pythagoras to convert units in a diagonal direction.
 
 The following code was run inside a program chunk with fig.width=1.7, fig.height=1.7.
 
@@ -27,15 +27,16 @@ a.px <- round(8*px.per.usr[1])
 b.px <- round(6*px.per.usr[2])
 c.px <- round(sqrt(a.px^2+b.px^2))
 
-text(4, -0.5, paste(a.px,"px"))
-text(8.5, 3, paste(b.px,"px"), srt=90)
-text(4, 3.5, paste(c.px,"px"), srt=45)
+text(4, -0.5, paste("8 x =", a.px, "px"))
+text(8.5, 3, paste("6 y =", b.px, "px"), srt=90)
+text(4, 3.5, paste("10 diag =", c.px, "px"), srt=45)
+# Note: srt=45 is just a rough guess
 
 s1 <- paste("<<", round(user.range[1]),
-  "usr =", round(region.px[1]), "px >>")
+  "x =", round(region.px[1]), "px >>")
 
 s2 <- paste("<<", round(user.range[2]),
-  "usr =", round(region.px[2]), "px >>")
+  "y =", round(region.px[2]), "px >>")
 
 text(4, 6.5, s1)
 text(-0.5, 3, s2, srt=90)

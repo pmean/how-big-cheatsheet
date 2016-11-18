@@ -553,6 +553,11 @@ There is no graph for this step
 ## My fonts are too big/too small
 
 Sometimes your fonts will be so large that they overlap each other or crowd out the other information in your graph. Fixing this takes a bit of trial and error. Here are some ways you can revise your graph to get more appropriate font sizes.
+1. Trying opening your graphics device with different values for height and width. While most aspects of your graph will scale proportionately, the fonts (and the margins) will remain the same. A larger graphics device size will end up shrinking your fonts relative to the size of the graph and a smaller graphics device size will end up expanding your fonts.
+2. Specify a larger/smaller value for the pointsize argument when you open your graphics device.
+3. Use the cex argument to increase or decrease the relative size of your fonts.
+
+Sometimes your fonts will be so large that they overlap each other or crowd out the other information in your graph. Fixing this takes a bit of trial and error. Here are some ways you can revise your graph to get more appropriate font sizes.
 
 1. Trying opening your graphics device with different values for height and width. While most aspects of your graph will scale proportionately, the fonts (and the margins) will remain the same. A larger graphics device size will end up shrinking your fonts relative to the size of the graph and a smaller graphics device size will end up expanding your fonts.
 
