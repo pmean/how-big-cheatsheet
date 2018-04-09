@@ -1,0 +1,106 @@
+---
+title: "five thirty eight date puzzle"
+author: "Steve Simon"
+date: "April 9, 2018"
+output: html_document
+---
+
+The April 6, 2018 puzzler involved date calculations, so I thought I'd try some of the date manipulation features in R to tackle the problem. Here's the riddle, as posed at 
+
+https://fivethirtyeight.com/features/when-will-the-arithmetic-anarchists-attack/
+
+"The year is 2000, and an arithmetical anarchist group has an idea. For the next 100 years, it will vandalize a famous landmark whenever the year (in two-digit form, for example this year is “18”) is the product of the month and date (i.e. month × date = year, in the MM/DD/YY format). A few questions about the lawless ensuing century: How many attacks will happen between the beginning of 2001 and the end of 2099? What year will see the most vandalism? The least? What will be the longest gap between attacks?"
+
+First, you have to set up a loop that goes from 2000-01-01 to 2099-12-31.The as.Date function converts a string to a variable of class Date. Normally, you have to tell R what format the string is being presented as, but when you adopt the ISO 8601 format, R will figure things out for you.
+
+```{r loop-limits}
+library(dplyr)
+library(lubridate)
+library(magrittr)
+
+"2000-01-01" %>% as.Date -> date_1
+"2099-12-31" %>% as.Date -> date_2
+
+```
+
+It is usually worthwhile to peek under the hood to see how the dates are stored.
+
+```{r peek}
+print.default(date_1)
+print.default(date_2)
+```
+
+R stores dates internally as the number of days since 1970-01-01. There are `r format(date_2-date_1, big.mark=",")` dates in the range we are interested in.
+
+Let's set up a loop. You need to be careful because the loop counter defaults to numeric, and you need to convert back to a Date object inside the loop. Then extract the month, date, and year using standard date manipulation functions. 
+
+```{r loop}
+special_dates <- NULL
+for (i in date_1:date_2) {
+  date_i <- i
+  attributes(date_i) <- list(class="Date")
+  date_i %>% format("%m") %>% as.numeric -> month_i
+  date_i %>% format("%d") %>% as.numeric -> day_i
+  date_i %>% format("%y") %>% as.numeric -> year_i
+  if (month_i*day_i != year_i) next
+  special_dates <- append(special_dates, date_i)
+}
+special_dates
+```
+
+Now we're ready to answer some questions.
+
+"How many attacks will happen between the beginning of 2001 and the end of 2099?"
+
+```{r how-many-attacks}
+length(special_dates)
+```
+
+"What year will see the most vandalism?"
+
+```{r most-year}
+special_dates %>% format("%Y") %>% as.numeric %>% table %>% sort %>% rev
+```
+
+"The least?"
+
+```{r least-year}
+special_dates %>% format("%Y") %>% unique %>% as.numeric %>% setdiff(2000:2099, .)
+```
+
+"What will be the longest gap between attacks?"
+
+```{r longest-gap}
+special_dates %>% diff -> special_gaps
+i <- which.max(special_gaps)
+special_dates[c(i, i+1)]
+```
+
+And here's a few questions they didn't ask, but which are easy to solve.
+
+"What will be the shortest gap between attacks"
+
+```{r shortest-gap}
+special_dates %>% diff -> special_gaps
+i <- which.min(special_gaps)
+special_dates[c(i, i+1)]
+```
+
+"Which month is most/least popular?"
+
+```{r most-year}
+special_dates %>% format("%m") %>% as.numeric %>% table %>% sort %>% rev
+```
+
+"Which day is most/least popular?"
+
+```{r most-year}
+special_dates %>% format("%d") %>% as.numeric %>% table %>% sort %>% rev
+```
+
+
+"What weekday is most popular?"
+
+```{r popular-weekday}
+special_dates %>% weekdays %>% table %>% sort %>% rev
+```
